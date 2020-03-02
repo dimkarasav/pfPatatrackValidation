@@ -8,10 +8,33 @@ void Tracking_Comparisons_matched()
 	setTDRStyle_teliko(); 
 	gStyle->SetOptStat(0);
 
-	const int NoFiles = 3;
-	const int eta_bins = 4;
 
-	char input_files[NoFiles][500] ={"FullTracking_Candidates_ttbar_14TeV_PU.root","Patatrack_Candidates_ttbar_14TeV_ParamCheck1_onlyZeta.root","PatatrackPixels_Candidates_ttbar_14TeV_PU.root" };
+
+	double yBnd[]={0.0, 1.3, 2.4, 2.7, 3.0}; 
+
+
+
+
+	char input_files[][800] ={
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FullTracking_Candidates_ttbar_14TeV_noPU.root",
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_LooseTrackParams_noPU_onlyZeta.root",
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_noPU_LooseCuts_ptError45.root" , 
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_noPU_LooseCuts_ptError10.root"  
+
+
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FullTracking_Candidates_ttbar_14TeV_noPU.root",
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_LooseTrackParams_noPU_onlyZeta.root",
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_noPU_LooseCuts_DptOverPtCut2.root" , 
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_noPU_LooseCuts_DptOverPtCut1.root" , 
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_noPU_LooseCuts_DptOverPtCut0p8.root" , 
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_noPU_LooseCuts_DptOverPtCut1_ptError10.root"  
+
+"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_PU_nominal.root", 
+"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/PatatrackPixels_Candidates_ttbar_14TeV_noPU.root",
+"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_PU_LooseCuts.root", 
+"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_LooseTrackParams_noPU_onlyZeta.root"
+
+};
 
 	double pTlowCut = 0;
 	double pThighCut = 5000;
@@ -24,19 +47,24 @@ void Tracking_Comparisons_matched()
 
 	char analyzer_path[500] = {"/afs/cern.ch/work/d/dkarasav/public/ScoutingTriggers/CMSSW_11_0_0_pre7/src/Jakobs_producer/ProducerTest/"}; 
 //	char *output_directory = "Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/JetpT0_70"; 
-	char output_directory[200] = {"Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/"};         
-	char image_name[200] = {"Comparisons_PatatrackVsLegacyVsFull"}; 
+//	char output_directory[200] = {"Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/noPU/scanning_ptError_PFmodule/"};    
+	char output_directory[200] = {"Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/PUvsNoPU//"};                  
+	char image_name[200] = {"LooseCuts"}; 
 
-	char legend_array[NoFiles][500] = { "FullTracking" , "LooseZetaCuts", "PatatrackPixelTracking"  };
+
+	const int NoFiles = sizeof(input_files)/sizeof(input_files[0]);
+	const int eta_bins = sizeof(yBnd)/sizeof(yBnd[0])-1;
+	char legend_array[NoFiles][500] = { "nominal_PU" , "nominal_noPU","LooseCuts_PU" , "LooseCuts_noPU"   };
+//	char legend_array[NoFiles][500] = { "FullTracking" , "ptError90", "ptError45", "ptError10"  };
+//	char legend_array[NoFiles][500] = { "FullTracking" , "TrackAlgoCut5", "TrackAlgoCut2", "TrackAlgoCut1", "TrackAlgoCut0p8" ,"TrackCut1-ptError10"  };
 
 
-	int Colors[NoFiles] = { 1, 4, 2 } ; // black, blue, red , magenta
+//	int Colors[NoFiles] = { 1, 4, 2 , 6, 3 , 68} ; // black, blue, red , magenta
+	int Colors[NoFiles] = { 1, 4, 2 , 6 } ; // black, blue, red , magenta
 	bool scale_histos = false;
 	bool Save_Plots = true ;
 	double DR_threshold = 0.2;
 
-//	double yBnd[eta_bins+1]={0.0, 1.3, 2.4, 2.7, 3.0, 5.0}; 
-	double yBnd[eta_bins+1]={0.0, 1.3, 2.4, 2.7, 3.0}; 
 
 	char eta_bins_legend[eta_bins][25];
 
@@ -136,8 +164,6 @@ for (int NoFile=0; NoFile<NoFiles; NoFile++)
 	TTree *tree[NoFiles];
 
 
-
-
 	std::vector<float> *jpt = 0;
 	std::vector<float> *eta = 0;
 	std::vector<float> *phi = 0;
@@ -223,7 +249,6 @@ for (int NoFile=0; NoFile<NoFiles; NoFile++)
 			{
 				for ( int j=0; j<size; j++) 
 				{
-
 
 				//	cout << " reco matched jet = " << reco_jets_matched_sequence[j] << endl; ;
 					if (reco_jets_matched_sequence[j]>-0.1 && ( jpt->at(reco_jets_matched_sequence[j]) < pTlowCut || jpt->at(reco_jets_matched_sequence[j]) > pThighCut ) ) continue;
@@ -571,9 +596,11 @@ for (int NoFile=0; NoFile<NoFiles; NoFile++)
 			double res_mean = h_pT_res[NoFile][iy]->GetMean();
 			double res_rms = h_pT_res[NoFile][iy]->GetRMS();
 
+		//	h_pT_res[NoFile][iy]->Scale(1./res_mean);
+
 			if( NoFile == 0)
 			{
-				leg3[iy] =new TLegend(.2, .75, .8, .85);//7899//4899
+				leg3[iy] =new TLegend(.2, .7, .8, .85);//7899//4899
 				leg3[iy]->SetTextSize(0.04);
 				leg3[iy]->SetFillColor(0); 
 				leg3[iy]->SetBorderSize(0);
@@ -594,7 +621,7 @@ for (int NoFile=0; NoFile<NoFiles; NoFile++)
 
 			h_pT_res[NoFile][iy]->SetLineColor(Colors[NoFile]); 
 			h_pT_res[NoFile][iy]->SetLineStyle(1);
-			h_pT_res[NoFile][iy]->SetMinimum(0.1);
+			h_pT_res[NoFile][iy]->SetMinimum(0.9);
 			h_pT_res[NoFile][iy]->SetMaximum(100000);
 			if ( NoFile==0 ) 	{	h_pT_res[NoFile][iy]->Draw("hist");	paveCMS ->Draw("same");  }
 			else h_pT_res[NoFile][iy]->Draw("same");

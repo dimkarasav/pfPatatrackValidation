@@ -14,23 +14,44 @@ void PFCandidate_comparison_matched()
 
 
 	char analyzer_path[200] = {"/afs/cern.ch/work/d/dkarasav/public/ScoutingTriggers/CMSSW_11_0_0_pre7/src/Jakobs_producer/ProducerTest/"}; 
-	char output_directory[200] ={ "Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/PFCandidate_plots/"};     
-	char image_name[150] = {"Comparisons_PatatrackVsLegacyVsFull"}; 
+//	char output_directory[200] = {"Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/noPU/scanning_ptError_PFmodule/"};         
+	char output_directory[200] = {"Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/PUvsNoPU//"};                  
+	char image_name[150] = {"LooseCuts"}; 
 
 
 
-	const int NoFiles = 3;
+	const int NoFiles = 4;
 	const int eta_bins = 4;
 
-	int Colors[NoFiles] = { 1, 4, 2} ; // black, blue, red 
+//	int Colors[NoFiles] = { 1, 4, 2 , 6, 3 , 68} ; // black, blue, red , magenta
+	int Colors[NoFiles] = { 1, 4, 2 , 6 } ; // black, blue, red , magenta
 	bool scale_on = false ;
 	bool Save_Plots = true; 
 
 //	char input_files[NoFiles][500] ={"FullTracking_Candidates_ttbar_14TeV_PU.root","LegacyPixelsTracks_Candidates_ttbar_14TeV_PU.root","PatatrackPixels_Candidates_ttbar_14TeV_PU.root" };
-	char input_files[NoFiles][500] ={"FullTracking_Candidates_ttbar_14TeV_PU.root","Patatrack_Candidates_ttbar_14TeV_ParamCheck1_onlyZeta.root","PatatrackPixels_Candidates_ttbar_14TeV_PU.root" };
+	char input_files[NoFiles][500] ={
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FullTracking_Candidates_ttbar_14TeV_noPU.root",
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_LooseTrackParams_noPU_onlyZeta.root",
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_noPU_LooseCuts_DptOverPtCut2.root" , 
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_noPU_LooseCuts_DptOverPtCut1.root" , 
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_noPU_LooseCuts_DptOverPtCut0p8.root" , 
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_noPU_LooseCuts_DptOverPtCut1_ptError10.root"  
 
-//	char legend_array[NoFiles][500] = { "FullTracking" , "LegacyPixelTracking", "PatatrackPixelTracking" };
-	char legend_array[NoFiles][500] = { "FullTracking" , "LooseZetaCuts", "PatatrackPixelTracking" };
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FullTracking_Candidates_ttbar_14TeV_noPU.root",
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_LooseTrackParams_noPU_onlyZeta.root",
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/PatatrackPixels_Candidates_ttbar_14TeV_noPU.root",
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_noPU_LooseCuts_ptError45.root" , 
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_noPU_LooseCuts_ptError10.root" 
+ 
+"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_PU_nominal.root", 
+"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/PatatrackPixels_Candidates_ttbar_14TeV_noPU.root",
+"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_PU_LooseCuts.root", 
+"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_LooseTrackParams_noPU_onlyZeta.root"
+};
+
+	char legend_array[NoFiles][500] = { "nominal_PU" , "nominal_noPU","LooseCuts_PU" , "LooseCuts_noPU"   };
+//	char legend_array[NoFiles][500] = { "FullTracking" , "TrackAlgoCut5", "TrackAlgoCut2", "TrackAlgoCut1", "TrackAlgoCut0p8" ,"TrackCut1-ptError10"  };
+//	char legend_array[NoFiles][500] = { "FullTracking" , "TrackAlgoCut5", "TrackAlgoCut2", "TrackAlgoCut1"  };
 
 //	TFile *f1 = TFile::Open("PatatrackPixels_Candidates_ttbar_14TeV_noPU.root","READ"); //full tracking file
 
@@ -491,17 +512,18 @@ void PFCandidate_comparison_matched()
 		} //end of loop on eta bins
 	} // end of loop on files
 
+/*
 		pad1->SaveAs("Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/Comparisons_PatatrackVsLegacyVsFull_ChargedPFcand_SumpT.png");
 		pad2->SaveAs("Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/Comparisons_PatatrackVsLegacyVsFull_NeutralPFcand_SumpT.png");
 		pad3->SaveAs("Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/Comparisons_PatatrackVsLegacyVsFull_ChargedPFcand_pT.png");
 		pad4->SaveAs("Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/Comparisons_PatatrackVsLegacyVsFull_NeutralPFcand_pT.png");
 		pad5->SaveAs("Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/Comparisons_PatatrackVsLegacyVsFull_ChargedPFcand_number.png");
 		pad6->SaveAs("Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/Comparisons_PatatrackVsLegacyVsFull_NeutralPFcand_number.png");
+*/
 
-/*
 	char filename[1500]; 
-//	if (Save_Plots)
-//	{ 
+	if(Save_Plots)
+	{ 
 		sprintf(filename,"%s/%s/%s_ChargedPFcand_SumpT.png",analyzer_path,output_directory,image_name);
 		pad1->SaveAs(filename);
 
@@ -514,7 +536,13 @@ void PFCandidate_comparison_matched()
 		sprintf(filename,"%s/%s/%s_NeutralPFcand_pT.png",analyzer_path,output_directory,image_name);
 		pad4->SaveAs(filename);
 
-//	}
-*/
+		sprintf(filename,"%s/%s/%s_ChargedPFcand_number.png",analyzer_path,output_directory,image_name);
+		pad5->SaveAs(filename);
+
+		sprintf(filename,"%s/%s/%s_NeutralPFcand_number.png",analyzer_path,output_directory,image_name);
+		pad6->SaveAs(filename);
+
+	}
+
 }
 

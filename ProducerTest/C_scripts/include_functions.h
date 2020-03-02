@@ -1,3 +1,6 @@
+//template <typename T,unsigned S>
+//inline unsigned arraysize(const T (&v)[S]) { return S; }
+
 #include <vector>
 #ifdef __MAKECINT__
 #pragma link C++ class vector<vector<float> >+;
@@ -14,19 +17,45 @@
 #include "TLegend.h"
 #include "TPaveText.h"
 #include "TLatex.h"
+#include "TF1.h"
 #include "TROOT.h"
 #include "setTDRStyle_teliko.C"
 #include "TGraphAsymmErrors.h"
 #include <iostream>
+
 //#define eta_bins 4
+
 using namespace std;
 
 
 
-int getBin(double x, double boundaries[], int eta_bins) 
+/*
+int getBin(double x, double boundaries[] ) 
 {
 	int i;
-	int n = eta_bins; //sizeof(boundaries)/sizeof(boundaries[0])-1;
+
+	//int n = sizeof(boundaries)/sizeof(boundaries[0])-1;
+	int n = arraysize(boundaries) -1;
+	cout << n << endl;
+	cout <<    << endl; 
+
+	if (x<boundaries[0] || x>=boundaries[n]) return -1;
+	for(i=0; i<n; i++)
+	{
+		if (x>=boundaries[i] && x<boundaries[i+1]) return i;
+	}
+	return 0;
+}
+*/
+
+
+
+int getBin(double x, double boundaries[], int bins) 
+{
+	int i;
+	int n = bins; //sizeof(boundaries)/sizeof(boundaries[0])-1;
+//	int n = sizeof(boundaries)/sizeof(boundaries[0])-1;
+//	cout << n << endl;
 	if (x<boundaries[0] || x>=boundaries[n]) return -1;
 	for(i=0;i<n;i++)
 	{
@@ -164,7 +193,7 @@ TGraphAsymmErrors* GetEfficiencyGraph(TH1D* numerator, TH1D* denominator )
 	{
 		eff_x[i] = 0.0; eff_y[i] = 0.0; eff_eyu[i] = 0.0; eff_eyl[i] = 0.0; eff_ex[i] = 0.0;
 
-		if( numerator->GetBinContent(i)>0 )
+		if( denominator->GetBinContent(i)>0 )
 		{
 			eff_x[i]   = denominator->GetBinCenter(i);
 			eff_y[i]   = numerator->GetBinContent(i) / denominator->GetBinContent(i);
