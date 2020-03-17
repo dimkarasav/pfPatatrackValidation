@@ -13,26 +13,66 @@ void Plot_Resolution_and_response()
 
 
 	char input_files[][800] ={
+
+//TrackAlgoCut scan
+
+"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FullTracking_Candidates_ttbar_14TeV_noPU.root",
+"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_LooseTrackParams_noPU_onlyZeta.root" ,
+"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_noPU_LooseCuts_DptOverPtCut2.root" , 
+"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_noPU_LooseCuts_DptOverPtCut1.root" , 
+"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_noPU_LooseCuts_DptOverPtCut1_ptError10.root",
+"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/PatatrackPixels_Candidates_ttbar_14TeV_noPU.root"
+
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FullTracking_Candidates_ttbar_14TeV_noPU.root",
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_LooseTrackParams_noPU_onlyZeta.root",
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/PatatrackPixels_Candidates_ttbar_14TeV_noPU.root",
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_noPU_LooseCuts_ptError45.root" , 
+//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_noPU_LooseCuts_ptError10.root" 
+
+
+//PU vs no PU
+/*
 "/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_PU_nominal.root", 
 "/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/PatatrackPixels_Candidates_ttbar_14TeV_noPU.root",
 "/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_PU_LooseCuts.root", 
 "/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_LooseTrackParams_noPU_onlyZeta.root"
+*/
+
+//pigun samples
+/*
+"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/pigun_60GeV/FullTracking_Candidates_pigun60GeV_noPU.root",
+"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/pigun_60GeV/Patatrack_Candidates_pigun60GeV_noPU_TightCuts.root",
+"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/pigun_60GeV/Patatrack_Candidates_pigun60GeV_noPU_LooseCuts.root"
+*/
 };
 
 	double yBnd[] = {0.0, 1.3, 2.4, 2.7, 3.0}; 
+//	double yBnd[] = {0.0, 1.3, 2.4}; 
 	double ptBnd[] = {10.,  60.,   100.,   150.,   220.,   450.}; 
+//	double ptBnd[] = {10.,  30.,   50.,   70.,  90}; 
 //	double ptBnd[] = {10.,   150.,    1500.}; 
 
 	double pTlowCut = 0;
 	double pThighCut = 5000;
 
-	bool ResfromGaus = false;
-	bool Save_Plots = true ;
+	bool useGausFits = false;
+	bool Save_Plots = false ;
 
-	int PadColumns = 3;
-	int PadRows = 2;
-	int Canvas_Xpixels = 1000;
-	int Canvas_Ypixels = 1000;
+	int PadColumnsPtBins = 3; 
+	int PadRowsPtBins = 2;
+	int PadColumnsEtaBins = 3; 
+	int PadRowsEtaBins = 2;
+/*
+	int Canvas_XpixelsPtBins = 1000;
+	int Canvas_YpixelsPtBins = 1000;
+	int Canvas_XpixelsEtaBins = 1000;
+	int Canvas_YpixelsEtaBins = 500;
+*/
+
+	int Canvas_XpixelsPtBins = PadColumnsPtBins*333;
+	int Canvas_YpixelsPtBins = PadRowsPtBins*500;
+	int Canvas_XpixelsEtaBins = PadColumnsEtaBins*333;
+	int Canvas_YpixelsEtaBins = PadRowsEtaBins*500;
 
 	const int eta_bins = sizeof(yBnd)/sizeof(yBnd[0])-1;
 	const int pT_bins = sizeof(ptBnd)/sizeof(ptBnd[0])-1;
@@ -41,22 +81,31 @@ void Plot_Resolution_and_response()
 	char analyzer_path[500] = {"/afs/cern.ch/work/d/dkarasav/public/ScoutingTriggers/CMSSW_11_0_0_pre7/src/Jakobs_producer/ProducerTest/"}; 
 	int Colors[] = { 1, 4, 2 , 6, 3, 7 , 28, 46} ; // black, blue, red , magenta, green, light blue ,  brown, redish
 	int MarkerStyle[] = { 8, 2, 5 , 4, 22, 21, 27, 28 } ; // 
-	char output_directory[200] = {"Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/PUvsNoPU/"};                  
+//	char output_directory[200] = {"Realistic_RunIII_14TeV/pigun_60GeV/Relaxing_ZetaCuts/"}; 
+	char output_directory[200] = {"Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/noPU/scanning_DptOverPtCut_10_3/"};      
+//	char output_directory[200] = {"Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/PUvsNoPU//"};                                
 	char image_name[200] = {"LooseCuts"}; 
-	char legend_array[NoFiles][500] = { "nominal_PU" , "nominal_noPU","LooseCuts_PU" , "LooseCuts_noPU"   };
+//	char legend_array[NoFiles][500] = { "nominal_PU" , "nominal_noPU","LooseCuts_PU" , "LooseCuts_noPU"   };
+	char legend_array[NoFiles][500] = { "FullTracking" , "LooseCuts", "TrackAlgoCut2", "TrackAlgoCut1" ,"TrackCut1-ptError10", "TightCuts"  };
+//	char legend_array[NoFiles][500] = { "FullTracking" , "TightCuts", "LooseCuts"  };
 	double DR_threshold = 0.2; //reco_gen matching threshold 
 
 
 
-	double pTraw_responses[NoFiles][eta_bins][pT_bins], pTraw_resolution[NoFiles][eta_bins][pT_bins], pTraw_resolution_Gaus[NoFiles][eta_bins][pT_bins];
+	double pTraw_responses[NoFiles][eta_bins][pT_bins], pTraw_resolution[NoFiles][eta_bins][pT_bins];
+	double pTraw_responses_error[NoFiles][eta_bins][pT_bins], pTraw_resolution_error[NoFiles][eta_bins][pT_bins];
+
+	double pTraw_resolution_Gaus[NoFiles][eta_bins][pT_bins], pTraw_response_Gaus[NoFiles][eta_bins][pT_bins];
+	double pTraw_resolution_Gaus_error[NoFiles][eta_bins][pT_bins], pTraw_response_Gaus_error[NoFiles][eta_bins][pT_bins];
+
 	double pT_resolution_corrected[NoFiles][eta_bins][pT_bins], pT_resolution_corrected_Gaus[NoFiles][eta_bins][pT_bins];
+	double pT_resolution_corrected_error[NoFiles][eta_bins][pT_bins], pT_resolution_corrected_Gaus_error[NoFiles][eta_bins][pT_bins];
 
-	double pTbinCenter[pT_bins];
-
-
+	double pTbinCenter[pT_bins], pTbinCenter_error[pT_bins];
 
 	
-	TGraph *gr_pT_response[NoFiles][eta_bins];
+	TGraphAsymmErrors *gr_pT_response[NoFiles][eta_bins], *gr_pT_resolution[NoFiles][eta_bins];
+
 	TH1D *h_pT_res[NoFiles][eta_bins][pT_bins], *h_pT_res_JEScorrected[NoFiles][eta_bins][pT_bins];
 
 //	cout << "eta bins = " << eta_bins;
@@ -71,8 +120,6 @@ void Plot_Resolution_and_response()
 	char name[256]; 
 	for (int NoFile=0; NoFile<NoFiles; NoFile++)
 	{
-
-
 		for (int  eta_bin=0; eta_bin<eta_bins; eta_bin++)
 		{
 			for (int  pT_bin=0; pT_bin<pT_bins; pT_bin++)
@@ -89,6 +136,7 @@ void Plot_Resolution_and_response()
 	for (int  pT_bin=0; pT_bin<pT_bins; pT_bin++)
 	{
 		pTbinCenter[pT_bin] = 0.5*(ptBnd[pT_bin+1] + ptBnd[pT_bin] );
+		pTbinCenter_error[pT_bin] = 0.5* ( ptBnd[pT_bin+1] - ptBnd[pT_bin] );
 	}
 
 
@@ -224,30 +272,46 @@ void Plot_Resolution_and_response()
 
 			for (int pT_bin=0; pT_bin< pT_bins; pT_bin++ )
 			{
-				double res_mean = h_pT_res[NoFile][eta_bin][pT_bin]->GetMean();
-				pTraw_responses[NoFile][eta_bin][pT_bin] = res_mean;
-
-				double res_rms = h_pT_res[NoFile][eta_bin][pT_bin]->GetRMS(); //
-				pTraw_resolution[NoFile][eta_bin][pT_bin] = res_rms;
-
-				if ( !(h_pT_res[NoFile][eta_bin][pT_bin]->Integral()>0) ) 
+				double Nsize = h_pT_res[NoFile][eta_bin][pT_bin]->Integral();
+				if ( !(Nsize>0) ) 
 				{
 					cout << "Warning!!! Histogram empty!!  eta bin : " << eta_bins_legend[eta_bin] << "  pT : " << pT_bins_legend[pT_bin] << endl;
 					continue;
 				}
 
+				double res_mean = h_pT_res[NoFile][eta_bin][pT_bin]->GetMean();
+				double res_rms = h_pT_res[NoFile][eta_bin][pT_bin]->GetRMS(); //
+				double res_mean_error = res_rms / Nsize; // error of mean value.
+				double res_rms_error = 	CalculateRMSerror( h_pT_res[NoFile][eta_bin][pT_bin] );
+
+
+//error of standard deviation found here : https://stats.stackexchange.com/questions/156518/what-is-the-standard-error-of-the-sample-standard-deviation
+
+
+				pTraw_responses[NoFile][eta_bin][pT_bin] = res_mean;
+				pTraw_resolution[NoFile][eta_bin][pT_bin] = res_rms;
+				pTraw_responses_error[NoFile][eta_bin][pT_bin] = res_mean_error;
+				pTraw_resolution_error[NoFile][eta_bin][pT_bin] = res_rms_error;
+
 				gauss->SetParameter(1, res_mean);
 				gauss->SetParameter(2, res_rms);
+
 				h_pT_res[NoFile][eta_bin][pT_bin]->Fit("gauss","0","0",res_mean-1.5*res_rms,res_mean+1.5*res_rms);
-				pTraw_resolution_Gaus[NoFile][eta_bin][pT_bin] = gauss->GetParameter(2);
+				pTraw_response_Gaus[NoFile][eta_bin][pT_bin] = gauss->GetParameter(1);
+				pTraw_response_Gaus_error[NoFile][eta_bin][pT_bin] = gauss->GetParError(1);
+				pTraw_resolution_Gaus[NoFile][eta_bin][pT_bin] = fabs(gauss->GetParameter(2));
+				pTraw_resolution_Gaus_error[NoFile][eta_bin][pT_bin] = gauss->GetParError(2);
 
 			} // end of loop of pT bins
 
-			gr_pT_response[NoFile][eta_bin] = new TGraph(pT_bins, pTbinCenter, pTraw_responses[NoFile][eta_bin] ); // creating response graphs
+
+
+			if (useGausFits) gr_pT_response[NoFile][eta_bin] = new TGraphAsymmErrors( pT_bins, pTbinCenter, pTraw_response_Gaus[NoFile][eta_bin], pTbinCenter_error, pTbinCenter_error, pTraw_response_Gaus_error[NoFile][eta_bin], pTraw_response_Gaus_error[NoFile][eta_bin] );	
+			else gr_pT_response[NoFile][eta_bin] = new TGraphAsymmErrors( pT_bins, pTbinCenter, pTraw_responses[NoFile][eta_bin], pTbinCenter_error, pTbinCenter_error, pTraw_responses_error[NoFile][eta_bin], pTraw_responses_error[NoFile][eta_bin] );	
 
 		}// end of loop of eta bins
 
-		cout << " Initializing 2nd loop to calculate resolutions corrected by response..." << endl;
+		cout << " Initializing 2nd loop to calculate corrected resolutions by response..." << endl;
 
 
 		cout<<"\nNumber of entries for tree "<< input_files[NoFile] << "\n  =  " << treeEntries[NoFile] <<endl;
@@ -288,23 +352,30 @@ void Plot_Resolution_and_response()
 		{
 			for (int pT_bin=0; pT_bin< pT_bins; pT_bin++ )
 			{
-				double res_rms = h_pT_res_JEScorrected[NoFile][eta_bin][pT_bin]->GetRMS(); //
-				pT_resolution_corrected[NoFile][eta_bin][pT_bin] = res_rms;
-
 				if ( !(h_pT_res[NoFile][eta_bin][pT_bin]->Integral()>0) ) 
 				{
 					cout << "Warning!!! Histogram empty!!  eta bin : " << eta_bins_legend[eta_bin] << "  pT : " << pT_bins_legend[pT_bin] << endl;
 					continue;
 				}
+				double res_rms = h_pT_res_JEScorrected[NoFile][eta_bin][pT_bin]->GetRMS(); //
+				double res_rms_error = 	CalculateRMSerror( h_pT_res[NoFile][eta_bin][pT_bin] );
+				pT_resolution_corrected[NoFile][eta_bin][pT_bin] = res_rms;
+				pT_resolution_corrected_error[NoFile][eta_bin][pT_bin] = res_rms_error;
 
-
+				
 				gauss->SetParameter(1, 1.);
 				gauss->SetParameter(2, res_rms);
 				h_pT_res_JEScorrected[NoFile][eta_bin][pT_bin]->Fit("gauss","","",1.-1.5*res_rms,1.+1.5*res_rms);
 				pT_resolution_corrected_Gaus[NoFile][eta_bin][pT_bin] = fabs(gauss->GetParameter(2));
+				pT_resolution_corrected_Gaus_error[NoFile][eta_bin][pT_bin] = gauss->GetParError(2);
+			} // end of pT bin loop
 
-			}
-		}
+			
+
+			if (useGausFits) gr_pT_resolution[NoFile][eta_bin] = new TGraphAsymmErrors(pT_bins, pTbinCenter, pT_resolution_corrected_Gaus[NoFile][eta_bin], pTbinCenter_error, pTbinCenter_error, pT_resolution_corrected_Gaus_error[NoFile][eta_bin], pT_resolution_corrected_Gaus_error[NoFile][eta_bin] );
+			else gr_pT_resolution[NoFile][eta_bin] = new TGraphAsymmErrors(pT_bins, pTbinCenter, pT_resolution_corrected[NoFile][eta_bin], pTbinCenter_error, pTbinCenter_error, pT_resolution_corrected_error[NoFile][eta_bin], pT_resolution_corrected_error[NoFile][eta_bin] ); // creating resolution graphs
+
+		} // end of eta bin loop
 	} // end of loop on files
 
 
@@ -313,17 +384,19 @@ void Plot_Resolution_and_response()
 	char res_text[200];
 	
 
-	TCanvas *ptResponsePad = new TCanvas("ptResponsePad", "",Canvas_Xpixels,Canvas_Ypixels);
-	ptResponsePad->Divide(PadColumns,PadRows);
+	TCanvas *ptResponsePad = new TCanvas("ptResponsePad", "",Canvas_XpixelsEtaBins,Canvas_YpixelsEtaBins);
+	ptResponsePad->Divide(PadColumnsEtaBins,PadRowsEtaBins);
 
+	TCanvas *ptResolutionPad = new TCanvas("ptResolutionPad", "",Canvas_XpixelsEtaBins,Canvas_YpixelsEtaBins);
+	ptResolutionPad->Divide(PadColumnsEtaBins,PadRowsEtaBins);
 
-	TCanvas *ptResolutionPad[eta_bins];
+	TCanvas *EtaPtResolutionPad[eta_bins];
 	
 	for (int eta_bin = 0; eta_bin<eta_bins; eta_bin++)
 	{
-		sprintf(name,"ptResolutionPad_etaBin%i",eta_bin);
-		ptResolutionPad[eta_bin] = new TCanvas(name, eta_bins_legend[eta_bin],Canvas_Xpixels,Canvas_Ypixels);
-		ptResolutionPad[eta_bin]->Divide(PadColumns,PadRows);
+		sprintf(name,"EtaPtResolutionPad_etaBin%i",eta_bin);
+		EtaPtResolutionPad[eta_bin] = new TCanvas(name, eta_bins_legend[eta_bin],Canvas_XpixelsPtBins,Canvas_YpixelsPtBins);
+		EtaPtResolutionPad[eta_bin]->Divide(PadColumnsPtBins,PadRowsPtBins);
 	}
 
 
@@ -367,18 +440,65 @@ void Plot_Resolution_and_response()
 			etaTextLatx->SetTextSize(0.06);
 
 			ptResponsePad->cd(eta_bin+1);
+			if(NoFile == 0 )
+			{	
+				TH1F *hr = ptResponsePad->cd(eta_bin+1)->DrawFrame(0.,0.5,ptBnd[pT_bins],1.5);
+				//if(eta_bin_counter==5) TH1F *hr = pad1->cd(eta_bin_counter+1)->DrawFrame(0,0.8,3000,1.2);
+				//if(eta_bin_counter==6) TH1F *hr = pad1->cd(eta_bin_counter+1)->DrawFrame(0,0.0,3000,1.5);
+				hr->SetXTitle("jet pT (GeV)");
+				hr->SetYTitle("jet pT Response");
+				hr->GetYaxis()->SetTitleOffset(1.3);
+				hr->GetXaxis()->SetTitleOffset(1.3);
+				hr->SetTitle(eta_bins_legend[eta_bin]);
+			}
+
+
+
 			gr_pT_response[NoFile][eta_bin]->SetLineColor(Colors[NoFile]);
 			gr_pT_response[NoFile][eta_bin]->SetLineWidth(2);
 			gr_pT_response[NoFile][eta_bin]->SetLineStyle(1);
 			gr_pT_response[NoFile][eta_bin]->SetMarkerColor(Colors[NoFile]);
-			gr_pT_response[NoFile][eta_bin]->SetMarkerStyle(MarkerStyle[NoFile]);
-			gr_pT_response[NoFile][eta_bin]->GetYaxis()->SetRangeUser(0.5, 1.5);
-			gr_pT_response[NoFile][eta_bin]->GetYaxis()->SetTitle("Response");
-			gr_pT_response[NoFile][eta_bin]->GetXaxis()->SetTitle("jet pT (GeV)");
-			if ( NoFile==0 ) 	{	gr_pT_response[NoFile][eta_bin]->Draw("");	paveCMS ->Draw("same");  }
-			else gr_pT_response[NoFile][eta_bin]->Draw("same LP");
+//			gr_pT_response[NoFile][eta_bin]->SetMarkerStyle(MarkerStyle[NoFile]);
+			gr_pT_response[NoFile][eta_bin]->SetMarkerStyle(24);
+			gr_pT_response[NoFile][eta_bin]->SetMarkerSize(0.3);
+	//		gr_pT_response[NoFile][eta_bin]->GetYaxis()->SetRangeUser(0.5, 1.5);
+//			gr_pT_response[NoFile][eta_bin]->GetYaxis()->SetTitle("Response");
+//			gr_pT_response[NoFile][eta_bin]->GetXaxis()->SetTitle("jet pT (GeV)");
+			if ( NoFile==0 ) 	{	gr_pT_response[NoFile][eta_bin]->Draw("p");	paveCMS ->Draw("same");  }
+			else gr_pT_response[NoFile][eta_bin]->Draw("same p");
 			paveCMS->Draw("same");
 			etaTextLatx->Draw();
+
+
+			
+			ptResolutionPad->cd(eta_bin+1);
+			if(NoFile == 0 )
+			{	
+				TH1F *hr = ptResolutionPad->cd(eta_bin+1)->DrawFrame(0.,0.02,ptBnd[pT_bins],0.4);
+				//if(eta_bin_counter==5) TH1F *hr = pad1->cd(eta_bin_counter+1)->DrawFrame(0,0.8,3000,1.2);
+				//if(eta_bin_counter==6) TH1F *hr = pad1->cd(eta_bin_counter+1)->DrawFrame(0,0.0,3000,1.5);
+				hr->SetXTitle("jet pT (GeV)");
+				hr->SetYTitle("jet pT Resolution");
+				hr->GetYaxis()->SetTitleOffset(1.3);
+				hr->GetXaxis()->SetTitleOffset(1.3);
+				hr->SetTitle(eta_bins_legend[eta_bin]);
+			}
+
+			gr_pT_resolution[NoFile][eta_bin]->SetLineColor(Colors[NoFile]);
+			gr_pT_resolution[NoFile][eta_bin]->SetLineWidth(2);
+			gr_pT_resolution[NoFile][eta_bin]->SetLineStyle(1);
+			gr_pT_resolution[NoFile][eta_bin]->SetMarkerColor(Colors[NoFile]);
+//			gr_pT_resolution[NoFile][eta_bin]->SetMarkerStyle(MarkerStyle[NoFile]);
+			gr_pT_resolution[NoFile][eta_bin]->SetMarkerStyle(24);
+			gr_pT_resolution[NoFile][eta_bin]->SetMarkerSize(0.3);
+//			gr_pT_resolution[NoFile][eta_bin]->GetYaxis()->SetRangeUser(0.02, 0.4);
+//			gr_pT_resolution[NoFile][eta_bin]->GetYaxis()->SetTitle("jet pT resolution");
+//			gr_pT_resolution[NoFile][eta_bin]->GetXaxis()->SetTitle("jet pT (GeV)");
+			if ( NoFile==0 ) 	{	gr_pT_resolution[NoFile][eta_bin]->Draw("p");	paveCMS ->Draw("same");  }
+			else gr_pT_resolution[NoFile][eta_bin]->Draw("same p");
+			paveCMS->Draw("same");
+			etaTextLatx->Draw();
+
 
 
 			leg1[eta_bin]->AddEntry(h_pT_res_JEScorrected[NoFile][0][0], legend_array[NoFile], "L");
@@ -402,13 +522,13 @@ void Plot_Resolution_and_response()
 		 		}
 
 				
-				if (!ResfromGaus) sprintf(res_text, " RES = %3.1f %%", 100*pT_resolution_corrected[NoFile][eta_bin][pT_bin]);
+				if (!useGausFits) sprintf(res_text, " RES = %3.1f %%", 100*pT_resolution_corrected[NoFile][eta_bin][pT_bin]);
 				else sprintf(res_text, " RES = %3.1f %%", 100*pT_resolution_corrected_Gaus[NoFile][eta_bin][pT_bin]);
 				leg3[eta_bin][pT_bin]->AddEntry(h_pT_res_JEScorrected[NoFile][eta_bin][pT_bin], res_text , "L");
 
 
-				ptResolutionPad[eta_bin]->cd(pT_bin+1);
-				ptResolutionPad[eta_bin]->cd(pT_bin+1)->SetLogy(1);
+				EtaPtResolutionPad[eta_bin]->cd(pT_bin+1);
+				EtaPtResolutionPad[eta_bin]->cd(pT_bin+1)->SetLogy(1);
 				h_pT_res_JEScorrected[NoFile][eta_bin][pT_bin]->GetXaxis()->SetTitle("pT_reco / pT_gen");
 				h_pT_res_JEScorrected[NoFile][eta_bin][pT_bin]->GetYaxis()->SetTitle("Entries");
 				h_pT_res_JEScorrected[NoFile][eta_bin][pT_bin]->GetYaxis()->SetTitleOffset(1.3);
@@ -427,12 +547,16 @@ void Plot_Resolution_and_response()
 			}  //end of pT bin loops
 		} // end of file loops
 
-		ptResolutionPad[eta_bin]->cd(pT_bins+1);	leg1[eta_bin]->Draw();
+		EtaPtResolutionPad[eta_bin]->cd(pT_bins+1);	leg1[eta_bin]->Draw();
 
 	} // end of eta bin loops
 
 	ptResponsePad->cd(eta_bins+1); 
 	leg2->Draw();
+
+	ptResolutionPad->cd(eta_bins+1); 
+	leg2->Draw();
+
 
 	char filename[500];
 	if (Save_Plots)
@@ -440,10 +564,13 @@ void Plot_Resolution_and_response()
 		sprintf(filename,"%s/%s/pTresponse_%s.png",analyzer_path,output_directory,image_name);
 		ptResponsePad->SaveAs(filename);
 
+		sprintf(filename,"%s/%s/pTresolution_%s.png",analyzer_path,output_directory,image_name);
+		ptResolutionPad->SaveAs(filename);
+
 		for (int eta_bin = 0; eta_bin<eta_bins; eta_bin++) 
 		{
 			sprintf(filename,"%s/%s/pTresolution_pTbinned_etaBin%i_%s.png",analyzer_path,output_directory,eta_bin,image_name);
-			ptResolutionPad[eta_bin]->SaveAs(filename);
+			EtaPtResolutionPad[eta_bin]->SaveAs(filename);
 		}
 	}
 
