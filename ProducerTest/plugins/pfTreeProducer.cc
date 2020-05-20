@@ -92,9 +92,10 @@ class pfTreeProducer_AddedCandidates : public edm::one::EDAnalyzer<edm::one::Sha
 		edm::EDGetTokenT<double> metpttoken, metphitoken;
 
         const edm::EDGetTokenT<std::vector<ScoutingVertex> >      VtxToken;
-        const edm::EDGetTokenT<GenEventInfoProduct>             genEvtInfoToken;
         const edm::EDGetTokenT<std::vector<reco::GenParticle> > gensToken;
-       
+        const edm::EDGetTokenT<GenEventInfoProduct>             genEvtInfoToken;
+	const edm::EDGetTokenT<std::vector<PileupSummaryInfo> > PUInfoToken;
+
         TTree* tree;
 
   	//Run and lumisection
@@ -147,12 +148,17 @@ class pfTreeProducer_AddedCandidates : public edm::one::EDAnalyzer<edm::one::Sha
 	std::vector<float>           jetSumEt;
 	std::vector < std::vector<int> >  	 jetconstituents;
 
+	std::vector<float>           npu_;
+	std::vector<int>           Number_interactions;
+	std::vector<int>           OriginBX;
+
 	int nVtx;
 	double SumEt, gen_SumEt;
 
 	int nch_;
 	int nnh_;
 	int nph_;
+	float weight_;
 
 
 	  //PFCand
@@ -178,8 +184,15 @@ pfTreeProducer_AddedCandidates::pfTreeProducer_AddedCandidates(const edm::Parame
   metpttoken            (consumes<double>           (iConfig.getParameter<edm::InputTag>("metpt"))),
   metphitoken            (consumes<double>           (iConfig.getParameter<edm::InputTag>("metphi"))),
   VtxToken            (consumes<std::vector<ScoutingVertex> >           (iConfig.getParameter<edm::InputTag>("primVtx"))),
-  gensToken               (consumes<std::vector<reco::GenParticle> >        (iConfig.getParameter<edm::InputTag>("genpart")))
+  gensToken               (consumes<std::vector<reco::GenParticle> >        (iConfig.getParameter<edm::InputTag>("genpart"))),
 
+  genEvtInfoToken           ( consumes<GenEventInfoProduct>(iConfig.getUntrackedParameter<edm::InputTag>  ("ptHat"))),
+
+  PUInfoToken              ( consumes<std::vector<PileupSummaryInfo> >(iConfig.getUntrackedParameter<edm::InputTag>    ("pu")))
+//  genEvtInfoToken       (consumes<GenEventInfoProduct>(iConfig.getUntrackedParameter<edm::InputTag>("PdfInfoTag", edm::InputTag("generator"))))
+
+//  genEvtInfoToken       (consumes<GenEventInfoProduct>(iConfig.getUntrackedParameter<edm::InputTag>("generator")))
+ // genEvtInfoToken  (mayConsume<GenEventInfoProduct>(edm::InputTag("generator")))
    
 {
 usesResource("TFileService");	
@@ -232,6 +245,10 @@ void pfTreeProducer_AddedCandidates::beginJob() {
     tree->Branch("nVtx"                , &nVtx                         , "nVtx/I"         );
     tree->Branch("SumEt"               , &SumEt            		       , "SumEt/D"        );
 
+	tree->Branch("npu"                  ,"vector<float>"       , &npu_, 32000, 0 );
+	tree->Branch("PileupInteractions"   ,"vector<int>"       , &Number_interactions, 32000, 0 );
+	tree->Branch("PileupOriginBX"       ,"vector<int>"       , &OriginBX , 32000, 0);
+	tree->Branch("weight"               ,&weight_            ,"weight/F");
 
 
 
@@ -302,6 +319,11 @@ void pfTreeProducer_AddedCandidates::analyze(const edm::Event& iEvent, const edm
 	nVtx = 0;
 	SumEt = 0;
 
+	weight_ = 0;
+	Number_interactions.clear();
+	OriginBX.clear();
+	npu_.clear();
+
 	gen_jpt.clear();
 	gen_eta.clear();
 	gen_phi.clear();
@@ -345,7 +367,44 @@ void pfTreeProducer_AddedCandidates::analyze(const edm::Event& iEvent, const edm
 
   Handle<vector<ScoutingParticle> > pfcandsH;
   iEvent.getByToken(pfcandsToken, pfcandsH);
+
+	Handle<GenEventInfoProduct> genEvtInfo;
+    iEvent.getByToken(genEvtInfoToken,genEvtInfo);
+
+  edm::Handle<std::vector<PileupSummaryInfo> > PUInfo;
+    iEvent.getByToken(PUInfoToken,PUInfo);
+
+//    iEvent.getByLabel( "generator","PdfInfoTag",genEvtInfo);
     
+
+ //-------------- Gen Event Info -----------------------------------
+//	if (!iEvent.isRealData())
+//	{
+//	cout << genEvtInfo->weight() << endl;
+	weight_ = genEvtInfo->weight(); 
+
+	for( std::vector<PileupSummaryInfo>::const_iterator it = PUInfo->begin(); it != PUInfo->end(); ++it )
+	{
+		npu_.push_back ( it -> getTrueNumInteractions() );
+		Number_interactions.push_back ( it->getPU_NumInteractions() ); 
+		OriginBX.push_back ( it -> getBunchCrossing());                
+	
+      }
+
+/*           
+		if( !genEvtInfo.isValid() ) edm::LogInfo("GenEvtInfo") << "ERROR: genEvtInfo not valid! " << genEvtInfo;
+    
+		if( genEvtInfo.isValid() )
+		{
+			edm::LogInfo("GenEvtInfo") << "Successfully obtained " << genEvtInfo;
+	//      ptHat_ = (genEvtInfo->hasBinningValues() ? genEvtInfo->binningValues()[0] : -999.);
+	//      processID_ = genEvtInfo->signalProcessID();
+	weight_ = genEvtInfo->weight();            
+	    }
+*/
+//	}    
+
+
     TLorentzVector mass;
     int jetcount=0;
 	double gen_tot_energy = 0; 
