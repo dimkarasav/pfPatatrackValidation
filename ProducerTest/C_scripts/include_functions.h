@@ -11,6 +11,7 @@
 #include "TCanvas.h"
 #include "TFrame.h"
 #include "TH1F.h"
+#include "TH2F.h"
 #include "TBenchmark.h"
 #include "TRandom.h"
 #include "TSystem.h"
@@ -64,6 +65,40 @@ int getBin(double x, double boundaries[], int bins)
 	return 0;
 }
 
+
+double CalculateMu4(TH1D* histo)  //calculates E( (X-μ)^4 )
+{
+	double mean = histo->GetMean();
+	double Ntot = histo->Integral();
+	double Nbins = histo->GetNbinsX();
+
+	double Mu4=0.; 
+
+	for( int i=0; i<Nbins; i++ )
+	{
+		double BinWeight = histo->GetBinContent(i);
+		double BinCenter = histo->GetBinCenter(i);
+
+		Mu4 = Mu4 + BinWeight*pow( BinCenter-mean ,4);		
+	}
+
+	Mu4 = Mu4 / Ntot;
+
+	return Mu4;
+}
+
+//error of standard deviation found here : https://stats.stackexchange.com/questions/156518/what-is-the-standard-error-of-the-sample-standard-deviation
+double CalculateRMSerror(TH1D* histo)
+{
+	double RMS = histo->GetRMS();
+	double Ntot = histo->Integral();
+	double mu4 = CalculateMu4(histo);
+	double RMSerror =  0.5*(1/RMS)*sqrt( (1/Ntot)*( mu4-(Ntot-3)*pow(RMS,4)/(Ntot-1) )  );
+
+	cout << "\n\n RMS = " <<  RMS << " + - " <<  RMSerror << endl;
+
+	return RMSerror;
+}
 
 
 //=====================================================================
@@ -206,4 +241,49 @@ TGraphAsymmErrors* GetEfficiencyGraph(TH1D* numerator, TH1D* denominator )
 
 	return Eff;
 }
+
+TH1D* InitiateFrameOnCanvasPad(TCanvas* c,int padNo, const char frameName[50], const char TitleX[50], const char TitleY[50], double Xmin, double Xmax, double Ymin, double Ymax, bool logYOn, TPaveText *pave)
+{
+
+	char name[100];
+	sprintf(name,"%s_%d",frameName,padNo);
+	TH1D *frame = new TH1D(name,name,100, Xmin, Xmax);
+
+	frame->SetMinimum(Ymin);
+	frame->SetMaximum(Ymax);
+	frame->GetXaxis()->SetRangeUser(Xmin,Xmax);
+	frame->GetXaxis()->SetTitle(TitleX);
+	frame->GetYaxis()->SetTitle(TitleY);
+	frame->SetLineColor(0);
+	frame->SetMarkerColor(0);
+	frame->GetXaxis()->SetTitleOffset(1.3);
+	frame->GetYaxis()->SetTitleOffset(1.3);
+
+	c->cd(padNo);
+	if(logYOn) c->cd(padNo)->SetLogy(1);
+	frame->Draw("");
+	pave->Draw("same");
+
+	return frame;
+}
+
+void DrawHistoToCanvasPad(TCanvas* c, int padNo, TH1D *hist, int ColorNo, int LineStyleNo)
+{
+	hist->SetLineColor(ColorNo);	
+	hist->SetLineStyle(LineStyleNo);	
+	c->cd(padNo);
+	hist->Draw("same hist");
+}
+
+void DrawGraphToCanvasPad(TCanvas* c, int padNo, TGraphAsymmErrors *graph, int ColorNo, int LineStyleNo)
+{
+	graph->SetLineColor(ColorNo);
+	graph->SetMarkerStyle(24);	
+	graph->SetMarkerColor(ColorNo);
+	graph->SetLineStyle(LineStyleNo);
+	graph->SetMarkerSize(0.3);	
+	c->cd(padNo);
+	graph->Draw("same p");
+}
+
 

@@ -411,7 +411,8 @@ for (int NoFile=0; NoFile<NoFiles; NoFile++)
 	leg2->SetBorderSize(0);
 
 
-	
+	 //dummy histograms to be used as frames in the plots
+	TH1D *frameCHF[eta_bins], *frameNHF[eta_bins], *frameCEMF[eta_bins], *frameNEMF[eta_bins], *frameMUF[eta_bins], *frameCM[eta_bins], *frameNM[eta_bins], *framePhi[eta_bins], *framePt[eta_bins], *frameEta, *frameSumEt, *frameMinDR;
 
 
 	for (int NoFile=0; NoFile<NoFiles; NoFile++)
@@ -420,51 +421,21 @@ for (int NoFile=0; NoFile<NoFiles; NoFile++)
 		leg1->AddEntry(h_CHFJet[NoFile][0], legend_array[NoFile], "L");
 		leg2->AddEntry(h_CHFJet[NoFile][0], legend_array[NoFile], "L");
 
-		c_eta->cd();
-		c_eta->SetLogy(1);
-		h_ETAJet[NoFile]->GetXaxis()->SetTitle("Jet eta");
-		h_ETAJet[NoFile]->GetYaxis()->SetTitle("Entries");
-		h_ETAJet[NoFile]->GetYaxis()->SetTitleOffset(1.3);
-		h_ETAJet[NoFile]->SetLineColor(Colors[NoFile]); 
-		h_ETAJet[NoFile]->SetLineStyle(1);
-		h_ETAJet[NoFile]->SetMinimum(0.1);
-		h_ETAJet[NoFile]->SetMaximum(100000);
-		if (scale_histos && h_ETAJet[NoFile]->Integral()>0 ) h_ETAJet[NoFile]->Scale(h_ETAJet[0]->Integral() /h_ETAJet[NoFile]->Integral());
-
-		if (NoFile==0)	
-		{
-			h_ETAJet[NoFile]->Draw("");
-			paveCMS ->Draw("same");
-			leg2->Draw("same");
-		}
-		else h_ETAJet[NoFile]->Draw("same hist");
-
-		
+		if (NoFile==0 )  frameEta = InitiateFrameOnCanvasPad(c_eta, 0 , "frameEta", "Jet eta", "Entries", -5., 5., 0.1, 100000., true, paveCMS);
+		if (scale_histos && h_ETAJet[NoFile]->Integral()>0 ) h_ETAJet[NoFile]->Scale(h_ETAJet[0]->Integral() / h_ETAJet[NoFile]->Integral());
+		DrawHistoToCanvasPad(c_eta, 0, h_ETAJet[NoFile], Colors[NoFile], 1);
+		if( NoFile== 0)  leg2->Draw("same"); 
 
 
-		c_SumEt->cd();
-		c_SumEt->SetLogy(1);
-		h_SumEt[NoFile]->GetXaxis()->SetTitle("SumEt");
-		h_SumEt[NoFile]->GetYaxis()->SetTitle("Entries");
-		h_SumEt[NoFile]->GetYaxis()->SetTitleOffset(1.3);
-		h_SumEt[NoFile]->SetLineColor(Colors[NoFile]); 
-		h_SumEt[NoFile]->SetLineStyle(1);
-		h_SumEt[NoFile]->SetMinimum(0.1);
-		h_SumEt[NoFile]->SetMaximum(100000);
-		if (scale_histos && h_SumEt[NoFile]->Integral()>0 ) h_SumEt[NoFile]->Scale(h_SumEt[0]->Integral() /h_SumEt[NoFile]->Integral());
-		if (NoFile==0)	
-		{
-			h_SumEt[NoFile]->Draw("");
-			paveCMS ->Draw("same");
-			leg2->Draw("same");
-		}
-		else h_SumEt[NoFile]->Draw("same hist");
+		if (NoFile==0 )  frameSumEt = InitiateFrameOnCanvasPad(c_SumEt, 0 , "frameSumEt", "SumEt", "Entries", 0., 7000., 0.1, 100000., true, paveCMS);
+		if (scale_histos && h_SumEt[NoFile]->Integral()>0 ) h_SumEt[NoFile]->Scale(h_SumEt[0]->Integral() / h_SumEt[NoFile]->Integral());
+		DrawHistoToCanvasPad(c_SumEt, 0, h_SumEt[NoFile], Colors[NoFile], 1);
+		if( NoFile== 0)  leg2->Draw("same"); 
 
 		
 		for(int iy=0; iy<eta_bins; iy++)
 		{
 			
-
 			double etamin = yBnd[iy];
 			double etamax = yBnd[iy+1];
 			const char *seta = (etamin==0 ? Form("|y| < %1.2g",etamax) :
@@ -473,189 +444,68 @@ for (int NoFile=0; NoFile<NoFiles; NoFile++)
 			teta->SetNDC();
 			teta->SetTextSize(0.06);
 
-			pad_chf->cd(iy+1);
-			pad_chf->cd(iy+1)->SetLogy(1);
-			h_CHFJet[NoFile][iy]->GetXaxis()->SetTitle("Charged Hadron Fraction");
-			h_CHFJet[NoFile][iy]->GetYaxis()->SetTitle("Entries");
-			h_CHFJet[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_CHFJet[NoFile][iy]->SetLineColor(Colors[NoFile]); 
-			h_CHFJet[NoFile][iy]->SetLineStyle(1);			
-			if (useWeights) h_CHFJet[NoFile][iy]->GetYaxis()->SetRangeUser(0.001*h_CHFJet[NoFile][iy]->GetMaximum() ,10*h_CHFJet[NoFile][iy]->GetMaximum() );
-			else 
-			{
-				h_CHFJet[NoFile][iy]->SetMinimum(0.1);
-				h_CHFJet[NoFile][iy]->SetMaximum(100000);
-			}
+
+			if (NoFile==0 )  frameCHF[iy] = InitiateFrameOnCanvasPad(pad_chf, iy+1, "frameCHF", "Charged Hadron Fraction", "Entries", 0., 1.1, 0.001, 10., true, paveCMS);
 			if (scale_histos && h_CHFJet[NoFile][iy]->Integral()>0 ) h_CHFJet[NoFile][iy]->Scale(h_CHFJet[0][iy]->Integral()/h_CHFJet[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 	{	h_CHFJet[NoFile][iy]->Draw("hist");		paveCMS ->Draw("same");	}
-			else h_CHFJet[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
+			DrawHistoToCanvasPad(pad_chf, iy+1, h_CHFJet[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) {pad_chf->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad_chf->cd(iy+1); teta->Draw(); }
 
-
-
-			pad_nhf->cd(iy+1);
-			pad_nhf->cd(iy+1)->SetLogy(1);
-			h_NHFJet[NoFile][iy]->GetXaxis()->SetTitle("Neutral Hadron Fraction");
-			h_NHFJet[NoFile][iy]->GetYaxis()->SetTitle("Entries");
-			h_NHFJet[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_NHFJet[NoFile][iy]->SetLineColor(Colors[NoFile]);
-			h_NHFJet[NoFile][iy]->SetLineStyle(1);
-			if (useWeights) h_NHFJet[NoFile][iy]->GetYaxis()->SetRangeUser(0.001*h_NHFJet[NoFile][iy]->GetMaximum() ,10*h_NHFJet[NoFile][iy]->GetMaximum() );
-			else 
-			{
-				h_NHFJet[NoFile][iy]->SetMinimum(0.1);
-				h_NHFJet[NoFile][iy]->SetMaximum(100000);
-			}
+			
+			if (NoFile==0 )  frameNHF[iy] = InitiateFrameOnCanvasPad(pad_nhf,iy+1, "frameNHF", "Neutral Hadron Fraction", "Entries", 0., 1.1, 0.001, 10., true, paveCMS);
 			if (scale_histos && h_NHFJet[NoFile][iy]->Integral()>0 ) h_NHFJet[NoFile][iy]->Scale(h_NHFJet[0][iy]->Integral()/h_NHFJet[NoFile][iy]->Integral());
-			if ( NoFile==0 ) {	h_NHFJet[NoFile][iy]->Draw("hist");				paveCMS ->Draw("same");	}
-			else h_NHFJet[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
+			DrawHistoToCanvasPad(pad_nhf, iy+1, h_NHFJet[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad_nhf->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad_nhf->cd(iy+1); teta->Draw(); }
 
 
-			pad_cemf->cd(iy+1);
-			pad_cemf->cd(iy+1)->SetLogy(1);
-			h_CEMFJet[NoFile][iy]->GetXaxis()->SetTitle("Charged E/M Fraction");
-			h_CEMFJet[NoFile][iy]->GetYaxis()->SetTitle("Entries");
-			h_CEMFJet[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_CEMFJet[NoFile][iy]->SetLineColor(Colors[NoFile]); 
-			h_CEMFJet[NoFile][iy]->SetLineStyle(1);
-			if (useWeights) h_CEMFJet[NoFile][iy]->GetYaxis()->SetRangeUser(0.001*h_CEMFJet[NoFile][iy]->GetMaximum() ,10*h_CEMFJet[NoFile][iy]->GetMaximum() );
-			else 
-			{
-				h_CEMFJet[NoFile][iy]->SetMinimum(0.1);
-				h_CEMFJet[NoFile][iy]->SetMaximum(100000);
-			}
+			if (NoFile==0 )  frameCEMF[iy] = InitiateFrameOnCanvasPad(pad_cemf,iy+1, "frameCEMF", "Charged E/M Fraction", "Entries", 0., 1.1, 0.001, 10., true, paveCMS);
 			if (scale_histos && h_CEMFJet[NoFile][iy]->Integral()>0 ) h_CEMFJet[NoFile][iy]->Scale(h_CEMFJet[0][iy]->Integral()/h_CEMFJet[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 	{	h_CEMFJet[NoFile][iy]->Draw("hist");	paveCMS ->Draw("same");  }
-			else h_CEMFJet[NoFile][iy]->Draw("same");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
+			DrawHistoToCanvasPad(pad_cemf, iy+1, h_CEMFJet[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad_cemf->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad_cemf->cd(iy+1); teta->Draw(); }
 
 
-			pad_nemf->cd(iy+1);
-			pad_nemf->cd(iy+1)->SetLogy(1);
-			h_NEMFJet[NoFile][iy]->GetXaxis()->SetTitle("Neutral E/M Fraction");
-			h_NEMFJet[NoFile][iy]->GetYaxis()->SetTitle("Entries");
-			h_NEMFJet[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_NEMFJet[NoFile][iy]->SetLineColor(Colors[NoFile]); 
-			h_NEMFJet[NoFile][iy]->SetLineStyle(1);
-			if (useWeights) h_NEMFJet[NoFile][iy]->GetYaxis()->SetRangeUser(0.001*h_NEMFJet[NoFile][iy]->GetMaximum() ,10*h_NEMFJet[NoFile][iy]->GetMaximum() );
-			else 
-			{
-				h_NEMFJet[NoFile][iy]->SetMinimum(0.1);
-				h_NEMFJet[NoFile][iy]->SetMaximum(100000);
-			}
+			if (NoFile==0 )  frameNEMF[iy] = InitiateFrameOnCanvasPad(pad_nemf,iy+1, "frameNEMF", "Neutral E/M Fraction", "Entries", 0., 1.1, 0.001, 10., true, paveCMS);
 			if (scale_histos && h_NEMFJet[NoFile][iy]->Integral()>0 ) h_NEMFJet[NoFile][iy]->Scale(h_NEMFJet[0][iy]->Integral()/h_NEMFJet[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 	{	h_NEMFJet[NoFile][iy]->Draw("hist");	paveCMS ->Draw("same");  }
-			else h_NEMFJet[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
+			DrawHistoToCanvasPad(pad_nemf, iy+1, h_NEMFJet[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad_nemf->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad_nemf->cd(iy+1); teta->Draw(); }
 
-			pad_muf->cd(iy+1);
-			pad_muf->cd(iy+1)->SetLogy(1);
-			h_MUFJet[NoFile][iy]->GetXaxis()->SetTitle("Muon Fraction");
-			h_MUFJet[NoFile][iy]->GetYaxis()->SetTitle("Entries");
-			h_MUFJet[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_MUFJet[NoFile][iy]->SetLineColor(Colors[NoFile]); 
-			h_MUFJet[NoFile][iy]->SetLineStyle(1);
-			if (useWeights) h_MUFJet[NoFile][iy]->GetYaxis()->SetRangeUser(0.001*h_MUFJet[NoFile][iy]->GetMaximum() ,10*h_MUFJet[NoFile][iy]->GetMaximum() );
-			else 
-			{
-				h_MUFJet[NoFile][iy]->SetMinimum(0.1);
-				h_MUFJet[NoFile][iy]->SetMaximum(100000);
-			}
+
+			if (NoFile==0 )  frameMUF[iy] = InitiateFrameOnCanvasPad(pad_muf,iy+1, "frameMUF", "Muon Fraction", "Entries", 0., 1.1, 0.001, 10., true, paveCMS);
 			if (scale_histos && h_MUFJet[NoFile][iy]->Integral()>0 ) h_MUFJet[NoFile][iy]->Scale(h_MUFJet[0][iy]->Integral()/h_MUFJet[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 	{	h_MUFJet[NoFile][iy]->Draw("hist");	paveCMS ->Draw("same");  }
-			else h_MUFJet[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
+			DrawHistoToCanvasPad(pad_muf, iy+1, h_MUFJet[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad_muf->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad_muf->cd(iy+1); teta->Draw(); }
 
-			pad_phi->cd(iy+1);
-			pad_phi->cd(iy+1)->SetLogy(1);
-			h_PHIJet[NoFile][iy]->GetXaxis()->SetTitle("Jet phi");
-			h_PHIJet[NoFile][iy]->GetYaxis()->SetTitle("Entries");
-			h_PHIJet[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_PHIJet[NoFile][iy]->SetLineColor(Colors[NoFile]);
-			h_PHIJet[NoFile][iy]->SetLineStyle(1);
-			if (useWeights) h_PHIJet[NoFile][iy]->GetYaxis()->SetRangeUser(0.001*h_PHIJet[NoFile][iy]->GetMaximum() ,10*h_PHIJet[NoFile][iy]->GetMaximum() );
-			else 
-			{
-				h_PHIJet[NoFile][iy]->SetMinimum(0.1);
-				h_PHIJet[NoFile][iy]->SetMaximum(100000);
-			}
+
+			if (NoFile==0 )  framePhi[iy] = InitiateFrameOnCanvasPad(pad_phi,iy+1, "framePhi", "Jet Phi", "Entries", -3.14, 3.14, 0.001, 10., true, paveCMS);
 			if (scale_histos && h_PHIJet[NoFile][iy]->Integral()>0 ) h_PHIJet[NoFile][iy]->Scale(h_PHIJet[0][iy]->Integral()/h_PHIJet[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 	{	h_PHIJet[NoFile][iy]->Draw("hist");	paveCMS ->Draw("same");  }
-			else h_PHIJet[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
+			DrawHistoToCanvasPad(pad_phi, iy+1, h_PHIJet[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad_phi->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad_phi->cd(iy+1); teta->Draw(); }
 
-			pad_CM->cd(iy+1);
-			pad_CM->cd(iy+1)->SetLogy(1);
-			h_CMJet[NoFile][iy]->GetXaxis()->SetTitle("Charged Multiplicity");
-			h_CMJet[NoFile][iy]->GetYaxis()->SetTitle("Entries");
-			h_CMJet[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_CMJet[NoFile][iy]->SetLineColor(Colors[NoFile]); 
-			h_CMJet[NoFile][iy]->SetLineStyle(1);
-			if (useWeights) h_CMJet[NoFile][iy]->GetYaxis()->SetRangeUser(0.001*h_CMJet[NoFile][iy]->GetMaximum(),10*h_CMJet[NoFile][iy]->GetMaximum() );
-			else 
-			{
-				h_CMJet[NoFile][iy]->SetMinimum(0.1);
-				h_CMJet[NoFile][iy]->SetMaximum(100000);
-			}
+
+			if (NoFile==0 ) frameCM[iy] = InitiateFrameOnCanvasPad(pad_CM,iy+1, "frameCM", "Charged Multiplicity", "Entries", 0., 80., 0.001, 10., true, paveCMS);
 			if (scale_histos && h_CMJet[NoFile][iy]->Integral()>0 ) h_CMJet[NoFile][iy]->Scale(h_CMJet[0][iy]->Integral()/h_CMJet[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 	{	h_CMJet[NoFile][iy]->Draw("hist");	paveCMS ->Draw("same");  }
-			else h_CMJet[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
+			DrawHistoToCanvasPad(pad_CM, iy+1, h_CMJet[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad_CM->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad_CM->cd(iy+1); teta->Draw(); }
 
-			pad_NM->cd(iy+1);
-			pad_NM->cd(iy+1)->SetLogy(1);
-			h_NMJet[NoFile][iy]->GetXaxis()->SetTitle("Neutral Multiplicity");
-			h_NMJet[NoFile][iy]->GetYaxis()->SetTitle("Entries");
-			h_NMJet[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_NMJet[NoFile][iy]->SetLineColor(Colors[NoFile]); 
-			h_NMJet[NoFile][iy]->SetLineStyle(1);
-			if (useWeights) h_NMJet[NoFile][iy]->GetYaxis()->SetRangeUser(0.001*h_NMJet[NoFile][iy]->GetMaximum() ,10*h_NMJet[NoFile][iy]->GetMaximum() );
-			else 
-			{
-				h_NMJet[NoFile][iy]->SetMinimum(0.1);
-				h_NMJet[NoFile][iy]->SetMaximum(100000);
-			}
+
+			if (NoFile==0 ) frameNM[iy] = InitiateFrameOnCanvasPad(pad_NM,iy+1, "frameNM", "Neutral Multiplicity", "Entries", 0., 80., 0.001, 10., true, paveCMS);
 			if (scale_histos && h_NMJet[NoFile][iy]->Integral()>0 ) h_NMJet[NoFile][iy]->Scale(h_NMJet[0][iy]->Integral()/h_NMJet[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 	{	h_NMJet[NoFile][iy]->Draw("hist");	paveCMS ->Draw("same");  }
-			else h_NMJet[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
+			DrawHistoToCanvasPad(pad_NM, iy+1, h_NMJet[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad_NM->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad_NM->cd(iy+1); teta->Draw(); }
 
-			pad_pt->cd(iy+1);
-			pad_pt->cd(iy+1)->SetLogy(1);
-			h_ptJet[NoFile][iy]->GetXaxis()->SetTitle("Jet pT (GeV)");
-			h_ptJet[NoFile][iy]->GetYaxis()->SetTitle("Entries");
-			h_ptJet[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_ptJet[NoFile][iy]->SetLineColor(Colors[NoFile]); 
-			h_ptJet[NoFile][iy]->SetLineStyle(1);
-			if (useWeights) h_ptJet[NoFile][iy]->GetYaxis()->SetRangeUser(0.001*h_ptJet[NoFile][iy]->GetMaximum() ,10*h_ptJet[NoFile][iy]->GetMaximum() );
-			else 
-			{
-				h_ptJet[NoFile][iy]->SetMinimum(0.1);
-				h_ptJet[NoFile][iy]->SetMaximum(100000);
-			}
+
+			if (NoFile==0 ) framePt[iy] = InitiateFrameOnCanvasPad(pad_pt,iy+1, "framepT", "Jet pT (GeV)", "Entries", 0., pThistoMax, 0.001, 10., true, paveCMS);
 			if (scale_histos && h_ptJet[NoFile][iy]->Integral()>0 ) h_ptJet[NoFile][iy]->Scale(h_ptJet[0][iy]->Integral()/h_ptJet[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 	{	h_ptJet[NoFile][iy]->Draw("hist");	paveCMS ->Draw("same");  }
-			else h_ptJet[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
+			DrawHistoToCanvasPad(pad_pt, iy+1, h_ptJet[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad_pt->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad_pt->cd(iy+1); teta->Draw(); }
 
 		}
 	 
