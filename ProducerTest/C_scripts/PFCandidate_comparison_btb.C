@@ -14,13 +14,8 @@ void PFCandidate_comparison_btb()
 
 
 	char analyzer_path[200] = {"/afs/cern.ch/work/d/dkarasav/public/ScoutingTriggers/CMSSW_11_0_0_pre7/src/Jakobs_producer/ProducerTest/"}; 
-//	char output_directory[200] = {"Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/noPU/scanning_ptError_PFmodule/"};         
-//	char output_directory[200] = {"Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/PUvsNoPU//"};      
-//	char output_directory[200] = {"Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/noPU/scanning_DptOverPtCut_10_3/"};      
-//	char output_directory[200] = {"Realistic_RunIII_14TeV/ttbar/mkFit/FullVsmkFit/"};        
-//	char output_directory[200] = {"Realistic_RunIII_14TeV/ttbar/testing_PFClusterProducer_iteration1/"};
-   	char output_directory[200] = {"Realistic_RunIII_14TeV/QCD_sample/Weighted_btb/"};                      
-//	char output_directory[200] = {"Realistic_RunIII_14TeV/pigun_60GeV/Relaxing_ZetaCuts/"};             
+                  
+	char output_directory[200] = {"deleteme/"};             
 	char image_name[150] = {"Patatrack"}; 
 
 //	double yBnd[]={0.0, 1.3, 2.4, 2.7, 3.0, 5.0}; 
@@ -32,80 +27,25 @@ void PFCandidate_comparison_btb()
 
 //	int Colors[NoFiles] = { 1, 4, 2 , 6, 3 , 68} ; // black, blue, red , magenta
 	int Colors[] = { 1, 4, 2 , 6, 3, 7 , 28, 46} ; // black, blue, red , magenta, green, light blue ,  brown, redish
-	bool scale_on = true ;
+	bool scale_histos = true ;
 	bool Save_Plots = true; 
 	bool useWeights = true;
 
 	double pTlowCut_leading = 60;
 	double pTlowCut_subleading = 30;
+	double pTmax = 450;
 	double pThighCut = 5000;
-	double pThistoMax = 450;
 	double deltaPhi = 2.7;
+
+	double YaxisLowEndMultiplier = 0.00001;
+	double YaxisHighEndMultiplier = 10.;
 
 
 	char input_files[][500] ={
 
-//mkFit comparisons
-//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FullTracking_Candidates_ttbar_14TeV_noPU.root",
-//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_LooseTrackParams_noPU_onlyZeta.root" ,
-//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/mkFit_Candidates_ttbar_noPU.root"
-//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/PatatrackPixels_Candidates_ttbar_14TeV_noPU.root"
-
-//optimized vs full tracking noPU
-//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FullTracking_Candidates_ttbar_14TeV_noPU.root",
-//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FixTrackCaloLink/Patatrack_ttbar_noPU_linkFix_pTError1_TrackAlgoCut2_Zeta0p5.root"
-
-//optimized vs full tracking
 "/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/QCD_samples/FullTracking_QCD_PU.root",
 "/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/QCD_samples/Patatrack_QCD_PU.root"
 
-//TrackAlgoCut scan
-/*
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FullTracking_Candidates_ttbar_14TeV_noPU.root",
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_ttbar_noPU_TightCuts_linkFix.root",
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FixTrackCaloLink/Patatrack_ttbar_noPU_linkFix_pTError1_TrackAlgoCut1.root",
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FixTrackCaloLink/Patatrack_ttbar_noPU_linkFix_pTError1_TrackAlgoCut2.root",
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FixTrackCaloLink/Patatrack_ttbar_noPU_linkFix_pTError1_TrackAlgoCut3.root",
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FixTrackCaloLink/Patatrack_ttbar_noPU_linkFix_pTError1_TrackAlgoCut4.root",
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FixTrackCaloLink/Patatrack_ttbar_noPU_linkFix_pTError1.root"
-*/
-//ZetaCut scan
-/*
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FullTracking_Candidates_ttbar_14TeV_noPU.root",
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_ttbar_noPU_TightCuts_linkFix.root",
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FixTrackCaloLink/Patatrack_ttbar_noPU_linkFix_pTError1_TrackAlgoCut2_Zeta0p2.root",
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FixTrackCaloLink/Patatrack_ttbar_noPU_linkFix_pTError1_TrackAlgoCut2_Zeta0p5.root",
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FixTrackCaloLink/Patatrack_ttbar_noPU_linkFix_pTError1_TrackAlgoCut2_Zeta1p0.root",
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FixTrackCaloLink/Patatrack_ttbar_noPU_linkFix_pTError1_TrackAlgoCut2.root",
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_ttbar_noPU_LooseCuts_linkFix.root"
-*/
-//optimized vs full PU
-//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FullTracking_Candidates_ttbar_14TeV_PU.root",
-//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FixTrackCaloLink/Patatrack_ttbar_PU_linkFix_optimized.root"
-//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FullTracking_Candidates_ttbar_14TeV_PU.root",
-//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FullTracking_ttbar_iteration1.root"
-//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FixTrackCaloLink/Patatrack_ttbar_PU_linkFix_optimized.root",
-//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_ttbar_iteration1.root"
-
-//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FullTracking_Candidates_ttbar_14TeV_noPU.root",
-//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/PatatrackPixels_Candidates_ttbar_14TeV_noPU.root",
-//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_LooseTrackParams_noPU_onlyZeta.root",
-//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_ttbar_noPU_TightCuts_linkFix.root",
-//"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_ttbar_noPU_LooseCuts_linkFix.root"
-//PU vs no PU
-/*
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_PU_nominal.root", 
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/PatatrackPixels_Candidates_ttbar_14TeV_noPU.root",
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_PU_LooseCuts.root", 
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/Patatrack_Candidates_ttbar_14TeV_LooseTrackParams_noPU_onlyZeta.root"
-*/
-
-//pigun samples
-/*
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/pigun_60GeV/FullTracking_Candidates_pigun60GeV_noPU.root",
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/pigun_60GeV/Patatrack_Candidates_pigun60GeV_noPU_TightCuts.root",
-"/eos/cms/store/user/dkarasav/ScoutingFiles/Producer_files/110X_mcRun3_2021_realistic_v6-v1/pigun_60GeV/Patatrack_Candidates_pigun60GeV_noPU_LooseCuts.root"
-*/
 };
 
 
@@ -118,30 +58,18 @@ void PFCandidate_comparison_btb()
 	const int NoFiles = sizeof(input_files)/sizeof(input_files[0]);
 	const int eta_bins = sizeof(yBnd)/sizeof(yBnd[0])-1;
 
-//	char legend_array[NoFiles][500] = { "FullTracking" , "TightCuts", "ZetaCut0p2", "ZetaCut0p5", "ZetaCut1p0", "ZetaCut2p0", "LooseCuts" };
-	char legend_array[NoFiles][500] = { "FullTracking" ,  "PatatrackPixelTracks"  };
-//	char legend_array[NoFiles][500] = { "MaxIteration_50" ,  "MaxIteration_1"  };
-//	char legend_array[NoFiles][500] = { "FullTracking" ,  "mkFitTracking"  };
-//	char legend_array[NoFiles][500] = { "FullTracking" , "LooseCuts", "TrackAlgoCut2", "TrackAlgoCut1" ,"TrackCut1-ptError10", "TightCuts"  };
-//	char legend_array[NoFiles][500] = { "FullTracking" , "TrackAlgoCut5", "TrackAlgoCut2", "TrackAlgoCut1"  };
 
-//	TFile *f1 = TFile::Open("PatatrackPixels_Candidates_ttbar_14TeV_noPU.root","READ"); //full tracking file
+	char legend_array[NoFiles][500] = { "FullTracking" ,  "PatatrackPixelTracks"  };
+
 
 	TFile *f[NoFiles];
 	TTree *tree[NoFiles];
 
-//	TTree *tree1 = (TTree*)f1->Get("dijetscouting/tree");
-
-
-	double pTmax = 300;
-	double DR_threshold = 0.2;
 
 	char eta_bins_legend[eta_bins][25];
 	char name[256]; 
 
 	int treeEntries[NoFiles];
-	int maxEntries;
-	bool flag_for_max_entries = true;
 
 	for (int iy=0; iy< eta_bins; iy++)
 	{
@@ -290,22 +218,16 @@ void PFCandidate_comparison_btb()
 		treeEntries[NoFile] = tree[NoFile]->GetEntries();
 		////////////////find the tree with the maximum entries to loop over them.
 
-		if (flag_for_max_entries)  // get the entry of the first tree
-		{
-			maxEntries = treeEntries[NoFile];
-			flag_for_max_entries = false;
-		}
-		if ( treeEntries[NoFile] > maxEntries ) maxEntries = treeEntries[NoFile];
 
 		cout<<"\nNumber of entries for tree "<< input_files[NoFile] << "\n  =  " << treeEntries[NoFile] <<endl;
-		cout << " Max entries = " << maxEntries << endl;
+
 
 
 		int reco_size, gen_size;
 
-//		for (int i=0; i<maxEntries; i++) //event loop
-		for (int i=0; i<treeEntries[NoFile]; i++) //event loop
-	//	for (int i=0; i<5; i++) //event loop
+
+//		for (int i=0; i<treeEntries[NoFile]; i++) //event loop
+		for (int i=0; i<100000; i++) //event loop
 		{
 
 			if ( i >=  treeEntries[NoFile] ) continue; 
@@ -320,13 +242,6 @@ void PFCandidate_comparison_btb()
 			if ( fabs( phi->at(0) - phi->at(1) ) < deltaPhi ) continue; 	// skip event if the two leading jets are not back-to-back
 			if ( jpt->at(0) < pTlowCut_leading || jpt->at(0) > pThighCut ) continue;// skip event if leading jet does not pass pT cuts
 			if ( jpt->at(1) < pTlowCut_subleading || jpt->at(1) > pThighCut ) continue;// skip event if sub-leading jet does not pass pT cuts
-
-
-
-//			if (npu->at(0)>80 || npu->at(0)<55) continue;
-
-
-
 
 
 //			cout << "\n Processing event " << i << " number of reco_jets : "<< reco_size <<endl; 
@@ -478,6 +393,9 @@ void PFCandidate_comparison_btb()
 	leg1->SetBorderSize(0);  
 
 
+ 	//dummy histograms to be used as frames in the plots
+	TH1D *frameChargedHadron_SumpT[eta_bins], *frameNeutralHadron_SumpT[eta_bins], *frameChargedHadron_pT[eta_bins], *frameNeutralHadron_pT[eta_bins], *frameNumberOfChargedHadrons[eta_bins], *frameNumberOfNeutralHadrons[eta_bins], *frameChargedHadron_DR[eta_bins], *frameNeutralHadron_DR[eta_bins], *framegirth[eta_bins], *framequadratic_moment[eta_bins];
+
 	for (int NoFile=0; NoFile<NoFiles; NoFile++)
 	{
 
@@ -492,6 +410,7 @@ void PFCandidate_comparison_btb()
  
 		leg1->AddEntry(h_ChargedHadron_SumpT[NoFile][0], legend_array[NoFile],  "L");
 
+
 		for(int iy=0; iy<eta_bins; iy++)
 		{
 
@@ -503,270 +422,75 @@ void PFCandidate_comparison_btb()
 			teta->SetNDC();
 			teta->SetTextSize(0.045);
 
-			if(eta_bins > 1) pad1->cd(iy+1);
-			else pad1->cd();
-			if(eta_bins > 1) pad1->cd(iy+1)->SetLogy(1);
-			else pad1->cd()->SetLogy(1);
-			h_ChargedHadron_SumpT[NoFile][iy]->GetXaxis()->SetTitle("Sum pT of charged hadrons per jet (GeV) ");
-			h_ChargedHadron_SumpT[NoFile][iy]->GetYaxis()->SetTitle("# jets");
-			h_ChargedHadron_SumpT[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_ChargedHadron_SumpT[NoFile][iy]->SetLineWidth(2);
-		//	h_ChargedHadron_SumpT[NoFile][iy]->SetMinimum(0.1);
-		//	h_ChargedHadron_SumpT[NoFile][iy]->SetMaximum(100000);
-			if(!useWeights)	h_ChargedHadron_SumpT[NoFile][iy]->GetYaxis()->SetRangeUser(0.1, 1000000);
-			else			h_ChargedHadron_SumpT[NoFile][iy]->GetYaxis()->SetRangeUser(0.001*h_ChargedHadron_SumpT[NoFile][iy]->GetMaximum(), 10*h_ChargedHadron_SumpT[NoFile][iy]->GetMaximum());
-			h_ChargedHadron_SumpT[NoFile][iy]->SetLineColor(Colors[NoFile]);
-			h_ChargedHadron_SumpT[NoFile][iy]->SetMarkerSize(0.04);
-			if(scale_on) h_ChargedHadron_SumpT[NoFile][iy]->Scale(h_ChargedHadron_SumpT[0][iy]->Integral()/h_ChargedHadron_SumpT[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 
-			{
-				h_ChargedHadron_SumpT[NoFile][iy]->Draw("hist");
-				paveCMS ->Draw("same");
-			}
-			else h_ChargedHadron_SumpT[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
-
-
-
-			if(eta_bins > 1) pad2->cd(iy+1);
-			else pad2->cd();
-			if(eta_bins > 1) pad2->cd(iy+1)->SetLogy(1);
-			else pad2->cd()->SetLogy(1);
-			h_NeutralHadron_SumpT[NoFile][iy]->GetXaxis()->SetTitle("Sum pT of neutral hadrons per jet (GeV) ");
-			h_NeutralHadron_SumpT[NoFile][iy]->GetYaxis()->SetTitle("# jets");
-			h_NeutralHadron_SumpT[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_NeutralHadron_SumpT[NoFile][iy]->SetLineWidth(2);
-		//	h_NeutralHadron_SumpT[NoFile][iy]->SetMinimum(0.1);
-		//	h_NeutralHadron_SumpT[NoFile][iy]->SetMaximum(100000);
-			if(!useWeights)	h_NeutralHadron_SumpT[NoFile][iy]->GetYaxis()->SetRangeUser(0.1, 1000000);
-			else			h_NeutralHadron_SumpT[NoFile][iy]->GetYaxis()->SetRangeUser(0.01*h_NeutralHadron_SumpT[NoFile][iy]->GetMaximum(), 10*h_NeutralHadron_SumpT[NoFile][iy]->GetMaximum());
-			h_NeutralHadron_SumpT[NoFile][iy]->SetLineColor(Colors[NoFile]);
-			h_NeutralHadron_SumpT[NoFile][iy]->SetMarkerSize(0.04);
-			if(scale_on) h_NeutralHadron_SumpT[NoFile][iy]->Scale(h_NeutralHadron_SumpT[0][iy]->Integral()/h_NeutralHadron_SumpT[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 
-			{
-				h_NeutralHadron_SumpT[NoFile][iy]->Draw("hist");
-				paveCMS ->Draw("same");
-			}
-			else h_NeutralHadron_SumpT[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
-
-
-			if(eta_bins > 1) pad3->cd(iy+1);
-			else pad3->cd();
-			if(eta_bins > 1) pad3->cd(iy+1)->SetLogy(1);
-			else pad3->cd()->SetLogy(1);
-			h_ChargedHadron_pT[NoFile][iy]->GetXaxis()->SetTitle("pT of charged hadrons (GeV) ");
-			h_ChargedHadron_pT[NoFile][iy]->GetYaxis()->SetTitle("# jets");
-			h_ChargedHadron_pT[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_ChargedHadron_pT[NoFile][iy]->SetLineWidth(2);
-		//	h_ChargedHadron_pT[NoFile][iy]->SetMinimum(0.1);
-		//	h_ChargedHadron_pT[NoFile][iy]->SetMaximum(100000);
-			if(!useWeights)	h_ChargedHadron_pT[NoFile][iy]->GetYaxis()->SetRangeUser(0.1, 1000000);
-			else			h_ChargedHadron_pT[NoFile][iy]->GetYaxis()->SetRangeUser(0.01*h_ChargedHadron_pT[NoFile][iy]->GetMaximum(), 10*h_ChargedHadron_pT[NoFile][iy]->GetMaximum());
-			h_ChargedHadron_pT[NoFile][iy]->SetLineColor(Colors[NoFile]);
-			h_ChargedHadron_pT[NoFile][iy]->SetMarkerSize(0.04);
-			if(scale_on) h_ChargedHadron_pT[NoFile][iy]->Scale(h_ChargedHadron_pT[0][iy]->Integral()/h_ChargedHadron_pT[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 
-			{
-				h_ChargedHadron_pT[NoFile][iy]->Draw("hist");
-				paveCMS ->Draw("same");
-			}
-			else h_ChargedHadron_pT[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
-
-
-
-			if(eta_bins > 1) pad4->cd(iy+1);
-			else pad4->cd();
-			if(eta_bins > 1) pad4->cd(iy+1)->SetLogy(1);
-			else pad4->cd()->SetLogy(1);
-			h_NeutralHadron_pT[NoFile][iy]->GetXaxis()->SetTitle("pT of neutral hadrons (GeV) ");
-			h_NeutralHadron_pT[NoFile][iy]->GetYaxis()->SetTitle("# jets");
-			h_NeutralHadron_pT[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_NeutralHadron_pT[NoFile][iy]->SetLineWidth(2);
-		//	h_NeutralHadron_pT[NoFile][iy]->SetMinimum(0.1);
-		//	h_NeutralHadron_pT[NoFile][iy]->SetMaximum(100000);
-			if(!useWeights)	h_NeutralHadron_pT[NoFile][iy]->GetYaxis()->SetRangeUser(0.1, 1000000);
-			else			h_NeutralHadron_pT[NoFile][iy]->GetYaxis()->SetRangeUser(0.01*h_NeutralHadron_pT[NoFile][iy]->GetMaximum(), 10*h_NeutralHadron_pT[NoFile][iy]->GetMaximum());
-			h_NeutralHadron_pT[NoFile][iy]->SetLineColor(Colors[NoFile]);
-			h_NeutralHadron_pT[NoFile][iy]->SetMarkerSize(0.04);
-			if(scale_on) h_NeutralHadron_pT[NoFile][iy]->Scale(h_NeutralHadron_pT[0][iy]->Integral()/h_NeutralHadron_pT[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 
-			{
-				h_NeutralHadron_pT[NoFile][iy]->Draw("hist");
-				paveCMS ->Draw("same");
-			}
-			else h_NeutralHadron_pT[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
-
-
 			
+			if (NoFile==0 )  frameChargedHadron_SumpT[iy] = InitiateFrameOnCanvasPad(pad1, iy+1, "frameChargedHadron_SumpT", "Sum pT of Charged hadrons per jet (GeV)", "#jets", 0., pTmax, YaxisLowEndMultiplier*h_ChargedHadron_SumpT[NoFile][iy]->GetMaximum(), YaxisHighEndMultiplier*h_ChargedHadron_SumpT[NoFile][iy]->GetMaximum() , true, paveCMS);
+			if (scale_histos && h_ChargedHadron_SumpT[NoFile][iy]->Integral()>0 ) h_ChargedHadron_SumpT[NoFile][iy]->Scale(h_ChargedHadron_SumpT[0][iy]->Integral()/h_ChargedHadron_SumpT[NoFile][iy]->Integral());
+			DrawHistoToCanvasPad(pad1, iy+1, h_ChargedHadron_SumpT[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) {pad1->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad1->cd(iy+1); teta->Draw(); }
 
 
-			if(eta_bins > 1) pad5->cd(iy+1);
-			else pad5->cd();
-			if(eta_bins > 1) pad5->cd(iy+1)->SetLogy(1);
-			else pad5->cd()->SetLogy(1);
-			h_NumberOfChargedHadrons[NoFile][iy]->GetXaxis()->SetTitle("# of charged candidates per jet ");
-			h_NumberOfChargedHadrons[NoFile][iy]->GetYaxis()->SetTitle("# jets");
-			h_NumberOfChargedHadrons[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_NumberOfChargedHadrons[NoFile][iy]->SetLineWidth(2);
-		//	h_NumberOfChargedHadrons[NoFile][iy]->SetMinimum(0.1);
-		//	h_NumberOfChargedHadrons[NoFile][iy]->SetMaximum(100000);
-			if(!useWeights)	h_NumberOfChargedHadrons[NoFile][iy]->GetYaxis()->SetRangeUser(0.1, 1000000);
-			else			h_NumberOfChargedHadrons[NoFile][iy]->GetYaxis()->SetRangeUser(0.01*h_NumberOfChargedHadrons[NoFile][iy]->GetMaximum(), 10*h_NumberOfChargedHadrons[NoFile][iy]->GetMaximum());
-			h_NumberOfChargedHadrons[NoFile][iy]->SetLineColor(Colors[NoFile]);
-			h_NumberOfChargedHadrons[NoFile][iy]->SetMarkerSize(0.04);
-			if(scale_on) h_NumberOfChargedHadrons[NoFile][iy]->Scale(h_NumberOfChargedHadrons[0][iy]->Integral()/h_NumberOfChargedHadrons[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 
-			{
-				h_NumberOfChargedHadrons[NoFile][iy]->Draw("hist");
-				paveCMS ->Draw("same");
-			}
-			else h_NumberOfChargedHadrons[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
+			if (NoFile==0 )  frameNeutralHadron_SumpT[iy] = InitiateFrameOnCanvasPad(pad2, iy+1, "frameNeutralHadron_SumpT", "Sum pT of Neutral hadrons per jet (GeV)", "#jets", 0., pTmax, YaxisLowEndMultiplier*h_NeutralHadron_SumpT[NoFile][iy]->GetMaximum(), YaxisHighEndMultiplier*h_NeutralHadron_SumpT[NoFile][iy]->GetMaximum() , true, paveCMS);
+			if (scale_histos && h_NeutralHadron_SumpT[NoFile][iy]->Integral()>0 ) h_NeutralHadron_SumpT[NoFile][iy]->Scale(h_NeutralHadron_SumpT[0][iy]->Integral()/h_NeutralHadron_SumpT[NoFile][iy]->Integral());
+			DrawHistoToCanvasPad(pad2, iy+1, h_NeutralHadron_SumpT[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) {pad2->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad2->cd(iy+1); teta->Draw(); }
 
 
+			if (NoFile==0 )  frameChargedHadron_pT[iy] = InitiateFrameOnCanvasPad(pad3, iy+1, "frameChargedHadron_pT", "Charged Hadron pT (GeV)", "# Charged Hadrons", 0., pTmax, YaxisLowEndMultiplier*h_ChargedHadron_pT[NoFile][iy]->GetMaximum(), YaxisHighEndMultiplier*h_ChargedHadron_pT[NoFile][iy]->GetMaximum() , true, paveCMS);
+			if (scale_histos && h_ChargedHadron_pT[NoFile][iy]->Integral()>0 ) h_ChargedHadron_pT[NoFile][iy]->Scale(h_ChargedHadron_pT[0][iy]->Integral()/h_ChargedHadron_pT[NoFile][iy]->Integral());
+			DrawHistoToCanvasPad(pad3, iy+1, h_ChargedHadron_pT[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) {pad3->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad3->cd(iy+1); teta->Draw(); }
 
 
-			if(eta_bins > 1) pad6->cd(iy+1);
-			else pad6->cd();
-			if(eta_bins > 1) pad6->cd(iy+1)->SetLogy(1);
-			else pad6->cd()->SetLogy(1);
-			h_NumberOfNeutralHadrons[NoFile][iy]->GetXaxis()->SetTitle("# of neutral candidates per jet");
-			h_NumberOfNeutralHadrons[NoFile][iy]->GetYaxis()->SetTitle("# jets");
-			h_NumberOfNeutralHadrons[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_NumberOfNeutralHadrons[NoFile][iy]->SetLineWidth(2);
-		//	h_NumberOfNeutralHadrons[NoFile][iy]->SetMinimum(0.1);
-		//	h_NumberOfNeutralHadrons[NoFile][iy]->SetMaximum(100000);
-			if(!useWeights)	h_NumberOfNeutralHadrons[NoFile][iy]->GetYaxis()->SetRangeUser(0.1, 1000000);
-			else			h_NumberOfNeutralHadrons[NoFile][iy]->GetYaxis()->SetRangeUser(0.01*h_NumberOfNeutralHadrons[NoFile][iy]->GetMaximum(), 10*h_NumberOfNeutralHadrons[NoFile][iy]->GetMaximum());
-			h_NumberOfNeutralHadrons[NoFile][iy]->SetLineColor(Colors[NoFile]);
-			h_NumberOfNeutralHadrons[NoFile][iy]->SetMarkerSize(0.04);
-			if(scale_on) h_NumberOfNeutralHadrons[NoFile][iy]->Scale(h_NumberOfNeutralHadrons[0][iy]->Integral()/h_NumberOfNeutralHadrons[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 
-			{
-				h_NumberOfNeutralHadrons[NoFile][iy]->Draw("hist");
-				paveCMS ->Draw("same");
-			}
-			else h_NumberOfNeutralHadrons[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
+			if (NoFile==0 )  frameNeutralHadron_pT[iy] = InitiateFrameOnCanvasPad(pad4, iy+1, "frameNeutralHadron_pT", "Neutral Hadron pT (GeV)", "# Neutral Hadrons", 0., pTmax, YaxisLowEndMultiplier*h_NeutralHadron_pT[NoFile][iy]->GetMaximum(), YaxisHighEndMultiplier*h_NeutralHadron_pT[NoFile][iy]->GetMaximum() , true, paveCMS);
+			if (scale_histos && h_NeutralHadron_pT[NoFile][iy]->Integral()>0 ) h_NeutralHadron_pT[NoFile][iy]->Scale(h_NeutralHadron_pT[0][iy]->Integral()/h_NeutralHadron_pT[NoFile][iy]->Integral());
+			DrawHistoToCanvasPad(pad4, iy+1, h_NeutralHadron_pT[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad4->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad4->cd(iy+1); teta->Draw(); }
 
 
-			if(eta_bins > 1) pad_ChargedCand_DR->cd(iy+1);
-			else pad_ChargedCand_DR->cd();
-			if(eta_bins > 1) pad_ChargedCand_DR->cd(iy+1)->SetLogy(1);
-			else pad_ChargedCand_DR->cd()->SetLogy(1);
-			h_ChargedHadron_DR[NoFile][iy]->GetXaxis()->SetTitle("Jet-ChargedCandidate DR");
-			h_ChargedHadron_DR[NoFile][iy]->GetYaxis()->SetTitle("# jets");
-			h_ChargedHadron_DR[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_ChargedHadron_DR[NoFile][iy]->SetLineWidth(2);
-		//	h_ChargedHadron_DR[NoFile][iy]->SetMinimum(0.1);
-		//	h_ChargedHadron_DR[NoFile][iy]->SetMaximum(100000);
-			if(!useWeights)	h_ChargedHadron_DR[NoFile][iy]->GetYaxis()->SetRangeUser(0.1, 100000);
-			else			h_ChargedHadron_DR[NoFile][iy]->GetYaxis()->SetRangeUser(0.01*h_ChargedHadron_DR[NoFile][iy]->GetMaximum(), 10*h_ChargedHadron_DR[NoFile][iy]->GetMaximum());
-			h_ChargedHadron_DR[NoFile][iy]->SetLineColor(Colors[NoFile]);
-			h_ChargedHadron_DR[NoFile][iy]->SetMarkerSize(0.04);
-			if(scale_on) h_ChargedHadron_DR[NoFile][iy]->Scale(h_ChargedHadron_DR[0][iy]->Integral()/h_ChargedHadron_DR[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 
-			{
-				h_ChargedHadron_DR[NoFile][iy]->Draw("hist");
-				paveCMS ->Draw("same");
-			}
-			else h_ChargedHadron_DR[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
+			if (NoFile==0 )  frameNumberOfChargedHadrons[iy] = InitiateFrameOnCanvasPad(pad5, iy+1, "frameNumberOfChargedHadrons", "# of charged candidates per jet", "# jets", 0., 50., YaxisLowEndMultiplier*h_NumberOfChargedHadrons[NoFile][iy]->GetMaximum(), YaxisHighEndMultiplier*h_NumberOfChargedHadrons[NoFile][iy]->GetMaximum() , true, paveCMS);
+			if (scale_histos && h_NumberOfChargedHadrons[NoFile][iy]->Integral()>0 ) h_NumberOfChargedHadrons[NoFile][iy]->Scale(h_NumberOfChargedHadrons[0][iy]->Integral()/h_NumberOfChargedHadrons[NoFile][iy]->Integral());
+			DrawHistoToCanvasPad(pad5, iy+1, h_NumberOfChargedHadrons[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad5->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad5->cd(iy+1); teta->Draw(); }
 
 
-			if(eta_bins > 1) pad_NeutralCand_DR->cd(iy+1);
-			else pad_NeutralCand_DR->cd();
-			if(eta_bins > 1) pad_NeutralCand_DR->cd(iy+1)->SetLogy(1);
-			else pad_NeutralCand_DR->cd()->SetLogy(1);
-			h_NeutralHadron_DR[NoFile][iy]->GetXaxis()->SetTitle("Jet-NeutralCandidate DR");
-			h_NeutralHadron_DR[NoFile][iy]->GetYaxis()->SetTitle("# jets");
-			h_NeutralHadron_DR[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_NeutralHadron_DR[NoFile][iy]->SetLineWidth(2);
-		//	h_ChargedHadron_DR[NoFile][iy]->SetMinimum(0.1);
-		//	h_ChargedHadron_DR[NoFile][iy]->SetMaximum(100000);
-			if(!useWeights)	h_NeutralHadron_DR[NoFile][iy]->GetYaxis()->SetRangeUser(0.1, 100000);
-			else			h_NeutralHadron_DR[NoFile][iy]->GetYaxis()->SetRangeUser(0.01*h_NeutralHadron_DR[NoFile][iy]->GetMaximum(), 10*h_NeutralHadron_DR[NoFile][iy]->GetMaximum());
-			h_NeutralHadron_DR[NoFile][iy]->SetLineColor(Colors[NoFile]);
-			h_NeutralHadron_DR[NoFile][iy]->SetMarkerSize(0.04);
-			if(scale_on) h_NeutralHadron_DR[NoFile][iy]->Scale(h_NeutralHadron_DR[0][iy]->Integral()/h_NeutralHadron_DR[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 
-			{
-				h_NeutralHadron_DR[NoFile][iy]->Draw("hist");
-				paveCMS ->Draw("same");
-			}
-			else h_NeutralHadron_DR[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
+			if (NoFile==0 )  frameNumberOfNeutralHadrons[iy] = InitiateFrameOnCanvasPad(pad6, iy+1, "frameNumberOfNeutralHadrons", "# of Neutral candidates per jet", "# jets", 0., 50., YaxisLowEndMultiplier*h_NumberOfNeutralHadrons[NoFile][iy]->GetMaximum(), YaxisHighEndMultiplier*h_NumberOfNeutralHadrons[NoFile][iy]->GetMaximum() , true, paveCMS);
+			if (scale_histos && h_NumberOfNeutralHadrons[NoFile][iy]->Integral()>0 ) h_NumberOfNeutralHadrons[NoFile][iy]->Scale(h_NumberOfNeutralHadrons[0][iy]->Integral()/h_NumberOfNeutralHadrons[NoFile][iy]->Integral());
+			DrawHistoToCanvasPad(pad6, iy+1, h_NumberOfNeutralHadrons[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad6->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad6->cd(iy+1); teta->Draw(); }
 
 
-			if(eta_bins > 1) pad_girth->cd(iy+1);
-			else pad_girth->cd();
-			if(eta_bins > 1) pad_girth->cd(iy+1)->SetLogy(1);
-			else pad_girth->cd()->SetLogy(1);
-			h_girth[NoFile][iy]->GetXaxis()->SetTitle("Jet-girth");
-			h_girth[NoFile][iy]->GetYaxis()->SetTitle("# jets");
-			h_girth[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_girth[NoFile][iy]->SetLineWidth(2);
-		//	h_ChargedHadron_DR[NoFile][iy]->SetMinimum(0.1);
-		//	h_ChargedHadron_DR[NoFile][iy]->SetMaximum(100000);
-			if(!useWeights)	h_girth[NoFile][iy]->GetYaxis()->SetRangeUser(0.1, 100000);
-			else			h_girth[NoFile][iy]->GetYaxis()->SetRangeUser(0.01*h_girth[NoFile][iy]->GetMaximum(), 10*h_girth[NoFile][iy]->GetMaximum());
-			h_girth[NoFile][iy]->SetLineColor(Colors[NoFile]);
-			h_girth[NoFile][iy]->SetMarkerSize(0.04);
-			if(scale_on) h_girth[NoFile][iy]->Scale(h_girth[0][iy]->Integral()/h_girth[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 
-			{
-				h_girth[NoFile][iy]->Draw("hist");
-				paveCMS ->Draw("same");
-			}
-			else h_girth[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
+			if (NoFile==0 )  frameChargedHadron_DR[iy] = InitiateFrameOnCanvasPad(pad_ChargedCand_DR, iy+1, "frameChargedHadron_DR", "Jet-ChargedCandidate DR", "# jets", 0., 0.5, YaxisLowEndMultiplier*h_ChargedHadron_DR[NoFile][iy]->GetMaximum(), YaxisHighEndMultiplier*h_ChargedHadron_DR[NoFile][iy]->GetMaximum() , true, paveCMS);
+			if (scale_histos && h_ChargedHadron_DR[NoFile][iy]->Integral()>0 ) h_ChargedHadron_DR[NoFile][iy]->Scale(h_ChargedHadron_DR[0][iy]->Integral()/h_ChargedHadron_DR[NoFile][iy]->Integral());
+			DrawHistoToCanvasPad(pad_ChargedCand_DR, iy+1, h_ChargedHadron_DR[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad_ChargedCand_DR->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad_ChargedCand_DR->cd(iy+1); teta->Draw(); }
 
 
+			if (NoFile==0 )  frameNeutralHadron_DR[iy] = InitiateFrameOnCanvasPad(pad_NeutralCand_DR, iy+1, "frameNeutralHadron_DR", "Jet-NeutralCandidate DR", "# jets", 0., 0.5, YaxisLowEndMultiplier*h_NeutralHadron_DR[NoFile][iy]->GetMaximum(), YaxisHighEndMultiplier*h_NeutralHadron_DR[NoFile][iy]->GetMaximum() , true, paveCMS);
+			if (scale_histos && h_NeutralHadron_DR[NoFile][iy]->Integral()>0 ) h_NeutralHadron_DR[NoFile][iy]->Scale(h_NeutralHadron_DR[0][iy]->Integral()/h_NeutralHadron_DR[NoFile][iy]->Integral());
+			DrawHistoToCanvasPad(pad_NeutralCand_DR, iy+1, h_NeutralHadron_DR[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad_NeutralCand_DR->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad_NeutralCand_DR->cd(iy+1); teta->Draw(); }
 
-			if(eta_bins > 1) pad_quadr_moment->cd(iy+1);
-			else pad_quadr_moment->cd();
-			if(eta_bins > 1) pad_quadr_moment->cd(iy+1)->SetLogy(1);
-			else pad_quadr_moment->cd()->SetLogy(1);
-			h_quadratic_moment[NoFile][iy]->GetXaxis()->SetTitle("Quadratic Radial Moment");
-			h_quadratic_moment[NoFile][iy]->GetYaxis()->SetTitle("# jets");
-			h_quadratic_moment[NoFile][iy]->GetYaxis()->SetTitleOffset(1.3);
-			h_quadratic_moment[NoFile][iy]->SetLineWidth(2);
-			if(!useWeights)	h_quadratic_moment[NoFile][iy]->GetYaxis()->SetRangeUser(0.1, 100000);
-			else			h_quadratic_moment[NoFile][iy]->GetYaxis()->SetRangeUser(0.01*h_quadratic_moment[NoFile][iy]->GetMaximum(), 10*h_quadratic_moment[NoFile][iy]->GetMaximum());
-			h_quadratic_moment[NoFile][iy]->SetLineColor(Colors[NoFile]);
-			h_quadratic_moment[NoFile][iy]->SetMarkerSize(0.04);
-			if(scale_on) h_quadratic_moment[NoFile][iy]->Scale(h_quadratic_moment[0][iy]->Integral()/h_quadratic_moment[NoFile][iy]->Integral());
-			if ( NoFile==0 ) 
-			{
-				h_quadratic_moment[NoFile][iy]->Draw("hist");
-				paveCMS ->Draw("same");
-			}
-			else h_quadratic_moment[NoFile][iy]->Draw("same hist");
-			teta->Draw();
-			//leg1->Draw("same");
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) leg1->Draw("same");
+
+			if (NoFile==0 )  framegirth[iy] = InitiateFrameOnCanvasPad(pad_girth, iy+1, "framegirth", "Jet girth", "# jets", 0., 1.0, YaxisLowEndMultiplier*h_girth[NoFile][iy]->GetMaximum(), YaxisHighEndMultiplier*h_girth[NoFile][iy]->GetMaximum() , true, paveCMS);
+			if (scale_histos && h_girth[NoFile][iy]->Integral()>0 ) h_girth[NoFile][iy]->Scale(h_girth[0][iy]->Integral()/h_girth[NoFile][iy]->Integral());
+			DrawHistoToCanvasPad(pad_girth, iy+1, h_girth[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad_girth->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad_girth->cd(iy+1); teta->Draw(); }
+
+
+			if (NoFile==0 )  framequadratic_moment[iy] = InitiateFrameOnCanvasPad(pad_quadr_moment, iy+1, "framequadratic_moment", "Quadratic Radial Moment", "# jets", 0., 1.0, YaxisLowEndMultiplier*h_quadratic_moment[NoFile][iy]->GetMaximum(), YaxisHighEndMultiplier*h_quadratic_moment[NoFile][iy]->GetMaximum() , true, paveCMS);
+			if (scale_histos && h_quadratic_moment[NoFile][iy]->Integral()>0 ) h_quadratic_moment[NoFile][iy]->Scale(h_quadratic_moment[0][iy]->Integral()/h_quadratic_moment[NoFile][iy]->Integral());
+			DrawHistoToCanvasPad(pad_quadr_moment, iy+1, h_quadratic_moment[NoFile][iy], Colors[NoFile], 1);
+			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad_quadr_moment->cd(iy+1); leg1->Draw("same");  }
+			else if( eta_bins > 1 && NoFile== 0) { pad_quadr_moment->cd(iy+1); teta->Draw(); }
 
 
 
@@ -855,14 +579,6 @@ void PFCandidate_comparison_btb()
 		} //end of loop on eta bins
 	} // end of loop on files
 
-/*
-		pad1->SaveAs("Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/Comparisons_PatatrackVsLegacyVsFull_ChargedPFcand_SumpT.png");
-		pad2->SaveAs("Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/Comparisons_PatatrackVsLegacyVsFull_NeutralPFcand_SumpT.png");
-		pad3->SaveAs("Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/Comparisons_PatatrackVsLegacyVsFull_ChargedPFcand_pT.png");
-		pad4->SaveAs("Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/Comparisons_PatatrackVsLegacyVsFull_NeutralPFcand_pT.png");
-		pad5->SaveAs("Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/Comparisons_PatatrackVsLegacyVsFull_ChargedPFcand_number.png");
-		pad6->SaveAs("Realistic_RunIII_14TeV/ttbar/Relaxing_ZetaCuts/Comparisons_PatatrackVsLegacyVsFull_NeutralPFcand_number.png");
-*/
 
 	char filename[1500]; 
 	if(Save_Plots)
