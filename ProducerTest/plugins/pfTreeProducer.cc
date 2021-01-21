@@ -27,6 +27,12 @@
 #include "DataFormats/Scouting/interface/ScoutingMuon.h"
 #include "DataFormats/Scouting/interface/ScoutingParticle.h"
 #include "DataFormats/Scouting/interface/ScoutingVertex.h"
+
+#include "DataFormats/Scouting/interface/Run3ScoutingMuon.h"
+#include "DataFormats/Scouting/interface/Run3ScoutingParticle.h"
+#include "DataFormats/Scouting/interface/Run3ScoutingVertex.h"
+#include "DataFormats/Scouting/interface/Run3ScoutingPFJet.h"
+
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenLumiInfoHeader.h"
@@ -83,15 +89,15 @@ class pfTreeProducer_AddedCandidates : public edm::one::EDAnalyzer<edm::one::Sha
         virtual void beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&) override;
         virtual void endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&) override;
         
-        const edm::EDGetTokenT<std::vector<ScoutingPFJet> >     jetsToken;
+        const edm::EDGetTokenT<std::vector<Run3ScoutingPFJet> >     jetsToken;
         const edm::EDGetTokenT<std::vector<reco::GenJet> >      genjetToken;
-        const edm::EDGetTokenT<std::vector<ScoutingMuon> >      muonsToken;
-	const edm::EDGetTokenT<std::vector<ScoutingParticle> >  	pfcandsToken;
+        const edm::EDGetTokenT<std::vector<Run3ScoutingMuon> >      muonsToken;
+	const edm::EDGetTokenT<std::vector<Run3ScoutingParticle> >  	pfcandsToken;
 
         
 		edm::EDGetTokenT<double> metpttoken, metphitoken;
 
-        const edm::EDGetTokenT<std::vector<ScoutingVertex> >      VtxToken;
+        const edm::EDGetTokenT<std::vector<Run3ScoutingVertex> >      VtxToken;
         const edm::EDGetTokenT<std::vector<reco::GenParticle> > gensToken;
         const edm::EDGetTokenT<GenEventInfoProduct>             genEvtInfoToken;
 	const edm::EDGetTokenT<std::vector<PileupSummaryInfo> > PUInfoToken;
@@ -99,8 +105,7 @@ class pfTreeProducer_AddedCandidates : public edm::one::EDAnalyzer<edm::one::Sha
         TTree* tree;
 
   	//Run and lumisection
-  	int run;
-  	int lumSec;
+  	
 	double recx;
 	double recy;
 	double my;
@@ -108,6 +113,7 @@ class pfTreeProducer_AddedCandidates : public edm::one::EDAnalyzer<edm::one::Sha
 	double u1;
 	double u2;
 	double met;
+	double met_phi;
 
 	double dijetMass;
 
@@ -154,6 +160,7 @@ class pfTreeProducer_AddedCandidates : public edm::one::EDAnalyzer<edm::one::Sha
 
 	int nVtx;
 	double SumEt, gen_SumEt;
+	int run_, lumi_, event_;
 
 	int nch_;
 	int nnh_;
@@ -176,14 +183,14 @@ class pfTreeProducer_AddedCandidates : public edm::one::EDAnalyzer<edm::one::Sha
 
 //Constructor
 pfTreeProducer_AddedCandidates::pfTreeProducer_AddedCandidates(const edm::ParameterSet& iConfig): 
-  jetsToken            (consumes<std::vector<ScoutingPFJet> >           (iConfig.getParameter<edm::InputTag>("jetsAK4"))),
+  jetsToken            (consumes<std::vector<Run3ScoutingPFJet> >           (iConfig.getParameter<edm::InputTag>("jetsAK4"))),
 //  jetsToken            (consumes<std::vector<ScoutingPFJet> >           (iConfig.getParameter<edm::InputTag>("hltAK4PFJets"))),
   genjetToken            (consumes<std::vector<reco::GenJet> >           (iConfig.getParameter<edm::InputTag>("genJet"))),
-  muonsToken            (consumes<std::vector<ScoutingMuon> >           (iConfig.getParameter<edm::InputTag>("muons"))),
-  pfcandsToken             (consumes<std::vector<ScoutingParticle> >         (iConfig.getParameter<edm::InputTag>("pfcands"))), 
+  muonsToken            (consumes<std::vector<Run3ScoutingMuon> >           (iConfig.getParameter<edm::InputTag>("muons"))),
+  pfcandsToken             (consumes<std::vector<Run3ScoutingParticle> >         (iConfig.getParameter<edm::InputTag>("pfcands"))), 
   metpttoken            (consumes<double>           (iConfig.getParameter<edm::InputTag>("metpt"))),
   metphitoken            (consumes<double>           (iConfig.getParameter<edm::InputTag>("metphi"))),
-  VtxToken            (consumes<std::vector<ScoutingVertex> >           (iConfig.getParameter<edm::InputTag>("primVtx"))),
+  VtxToken            (consumes<std::vector<Run3ScoutingVertex> >           (iConfig.getParameter<edm::InputTag>("primVtx"))),
   gensToken               (consumes<std::vector<reco::GenParticle> >        (iConfig.getParameter<edm::InputTag>("genpart"))),
 
   genEvtInfoToken           ( consumes<GenEventInfoProduct>(iConfig.getUntrackedParameter<edm::InputTag>  ("ptHat"))),
@@ -223,6 +230,9 @@ void pfTreeProducer_AddedCandidates::beginJob() {
 //    tree->Branch("u1"                  , &u1                           , "u1/D"        );
 //    tree->Branch("u2"                  , &u2                           , "u2/D"        );
 
+    tree->Branch("event"               ,&event_                         , "event/I");   
+    tree->Branch("lumi"               ,&lumi_                         , "lumi/I");  
+    tree->Branch("run"               ,&run_                         , "run/I");    
 
 
     tree->Branch("jpt"                 , "std::vector<float>"          , &jpt      , 32000, 0);
@@ -241,14 +251,16 @@ void pfTreeProducer_AddedCandidates::beginJob() {
     tree->Branch("neMult"              , "std::vector<float>"          , &neMult   , 32000, 0);
     tree->Branch("npr"                 , "std::vector<float>"          , &npr      , 32000, 0);
     tree->Branch("jetSumEt"            , "std::vector<float>"          , &jetSumEt , 32000, 0);
-    tree->Branch("jetconstituents"            	, "std::vector< vector<int> >"   , &jetconstituents 		, 32000, 0);
+    tree->Branch("jetconstituents"     , "std::vector< vector<int> >"  , &jetconstituents, 32000, 0);
     tree->Branch("nVtx"                , &nVtx                         , "nVtx/I"         );
     tree->Branch("SumEt"               , &SumEt            		       , "SumEt/D"        );
+    tree->Branch("met"               , &met            		       , "met/D"        );
+    tree->Branch("met_phi"               , &met_phi            		       , "met_phi/D"        );
 
-	tree->Branch("npu"                  ,"vector<float>"       , &npu_, 32000, 0 );
-	tree->Branch("PileupInteractions"   ,"vector<int>"       , &Number_interactions, 32000, 0 );
-	tree->Branch("PileupOriginBX"       ,"vector<int>"       , &OriginBX , 32000, 0);
-	tree->Branch("weight"               ,&weight_            ,"weight/F");
+    tree->Branch("npu"                  ,"vector<float>"       , &npu_, 32000, 0 );
+    tree->Branch("PileupInteractions"   ,"vector<int>"       , &Number_interactions, 32000, 0 );
+    tree->Branch("PileupOriginBX"       ,"vector<int>"       , &OriginBX , 32000, 0);
+    tree->Branch("weight"               ,&weight_            ,"weight/F");
 
 
 
@@ -318,11 +330,17 @@ void pfTreeProducer_AddedCandidates::analyze(const edm::Event& iEvent, const edm
 	npr.clear();
 	nVtx = 0;
 	SumEt = 0;
+	met =0;
+	met_phi =0;
 
 	weight_ = 0;
 	Number_interactions.clear();
 	OriginBX.clear();
 	npu_.clear();
+	run_ = 0;
+	lumi_= 0;
+	event_ = 0;
+
 
 	gen_jpt.clear();
 	gen_eta.clear();
@@ -346,13 +364,13 @@ void pfTreeProducer_AddedCandidates::analyze(const edm::Event& iEvent, const edm
     //recy.clear();
     // Handles to the EDM content
     
-    Handle<vector<ScoutingPFJet>> jetsH;
+    Handle<vector<Run3ScoutingPFJet>> jetsH;
     iEvent.getByToken(jetsToken, jetsH);
 
     Handle<vector<GenJet>> genjetsH;
     iEvent.getByToken(genjetToken, genjetsH);
 
-    Handle<vector<ScoutingMuon>> muonsH;
+    Handle<vector<Run3ScoutingMuon>> muonsH;
     iEvent.getByToken(muonsToken, muonsH);
     Handle<double> metptH;
     iEvent.getByToken(metpttoken, metptH);
@@ -362,10 +380,10 @@ void pfTreeProducer_AddedCandidates::analyze(const edm::Event& iEvent, const edm
     Handle<vector<GenParticle> > gensH;
     iEvent.getByToken(gensToken, gensH);
     
-	Handle<vector<ScoutingVertex>> VtxH;
+	Handle<vector<Run3ScoutingVertex>> VtxH;
     iEvent.getByToken(VtxToken, VtxH);
 
-  Handle<vector<ScoutingParticle> > pfcandsH;
+  Handle<vector<Run3ScoutingParticle> > pfcandsH;
   iEvent.getByToken(pfcandsToken, pfcandsH);
 
 	Handle<GenEventInfoProduct> genEvtInfo;
@@ -382,6 +400,10 @@ void pfTreeProducer_AddedCandidates::analyze(const edm::Event& iEvent, const edm
 //	{
 //	cout << genEvtInfo->weight() << endl;
 	weight_ = genEvtInfo->weight(); 
+
+	run_    = iEvent.id().run();
+  	event_  = iEvent.id().event();
+  	lumi_   = iEvent.id().luminosityBlock();
 
 	for( std::vector<PileupSummaryInfo>::const_iterator it = PUInfo->begin(); it != PUInfo->end(); ++it )
 	{
@@ -519,6 +541,8 @@ void pfTreeProducer_AddedCandidates::analyze(const edm::Event& iEvent, const edm
     //cout<"made it to Z"<<endl;
     
     //cout<"made it to after Z"<<endl;
+    met =*metptH;
+    met_phi = *metphiH;
     mx=TMath::Sin((*metphiH))*(*metptH);
     my=TMath::Cos((*metphiH))*(*metptH);
 
