@@ -222,18 +222,32 @@ void Make_pTreco_ov_pTgen_JEScorrected_histos()
 
 				int reco_ybin = getBin(fabs(eta->at(reco_jets_matched_sequence[j])),yBnd, eta_bins);
 				int reco_pTbin = getBin(jpt->at(reco_jets_matched_sequence[j]),ptBnd, pT_bins);
-				double Response_correction;
-				if (useGausFits) Response_correction = pTraw_response_Gaus[NoFile][reco_ybin][reco_pTbin];
-				else Response_correction = pTraw_responses[NoFile][reco_ybin][reco_pTbin];
 
-				if (reco_ybin>-1 && reco_pTbin>-1 && Response_correction>0 )
+				int gen_pTbin = getBin(gen_jpt->at(j), ptBnd, eta_bins);
+				int gen_ybin = getBin(fabs(gen_eta->at(j)), yBnd, pT_bins);
+				int ybin, pTbin;
+				if(useRecoBins) 
+				{
+					ybin  = reco_ybin;
+					pTbin = reco_pTbin;
+				}
+				else
+				{
+					ybin  = gen_ybin;
+					pTbin = gen_pTbin;
+				}
+				double Response_correction;
+				if (useGausFits) Response_correction = pTraw_response_Gaus[NoFile][ybin][pTbin];
+				else Response_correction = pTraw_responses[NoFile][ybin][pTbin];
+
+				if (ybin>-1 && pTbin>-1 && Response_correction>0 )
 				{
 
-					if(!useWeights ) h_pTreco_ov_pTgen_JEScorrected[NoFile][reco_ybin][reco_pTbin]->Fill( (jpt->at( reco_jets_matched_sequence[j] ) / gen_jpt->at(j)) / Response_correction );
+					if(!useWeights ) h_pTreco_ov_pTgen_JEScorrected[NoFile][ybin][pTbin]->Fill( (jpt->at( reco_jets_matched_sequence[j] ) / gen_jpt->at(j)) / Response_correction );
 					else 
 					{
-						h_pTreco_ov_pTgen_JEScorrected[NoFile][reco_ybin][reco_pTbin]->Fill( (jpt->at( reco_jets_matched_sequence[j] ) / gen_jpt->at(j)) / Response_correction , weight);
-						h_pTreco_ov_pTgen_JEScorrected_noWeights[NoFile][reco_ybin][reco_pTbin]->Fill( (jpt->at( reco_jets_matched_sequence[j] ) / gen_jpt->at(j)) / Response_correction);
+						h_pTreco_ov_pTgen_JEScorrected[NoFile][ybin][pTbin]->Fill( (jpt->at( reco_jets_matched_sequence[j] ) / gen_jpt->at(j)) / Response_correction , weight);
+						h_pTreco_ov_pTgen_JEScorrected_noWeights[NoFile][ybin][pTbin]->Fill( (jpt->at( reco_jets_matched_sequence[j] ) / gen_jpt->at(j)) / Response_correction);
 					}
 				}
 			} //end of loop on jets

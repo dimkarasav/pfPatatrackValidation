@@ -8,8 +8,6 @@ void Plot_Tracking_Comparisons_matched_histos()
 	setTDRStyle_teliko(); 
 	gStyle->SetOptStat(0);
 
-	double pThistoMax = 1000;
-
 
 	const int NoFiles = sizeof(input_files)/sizeof(input_files[0]);
 	const int eta_bins = sizeof(yBnd)/sizeof(yBnd[0])-1;
@@ -61,6 +59,7 @@ void Plot_Tracking_Comparisons_matched_histos()
 	
 		sprintf(name,"h_METovSumEt_%s",legend_array[NoFile]);
 		h_METovSumEt[NoFile] = (TH1D*)(f_input->Get(name));
+		h_METovSumEt[NoFile]->Rebin(2);
 
 		sprintf(name,"h_MET_%s",legend_array[NoFile]);
 		h_MET[NoFile] = (TH1D*)(f_input->Get(name)); // 40,0,1.0
@@ -116,16 +115,17 @@ void Plot_Tracking_Comparisons_matched_histos()
 		}// end of etabin loop
 	} // end of file loop
 
-
-	for (int NoFile=0; NoFile<NoFiles; NoFile++)
+	if (plot_matched)
 	{
-		for(Int_t h=0; h<eta_bins;h++)
+		for (int NoFile=0; NoFile<NoFiles; NoFile++)
 		{
-				Reco_eff[NoFile][h] = GetEfficiencyGraph(h_gen_pT[NoFile][h] , h_gen_pT_all[NoFile][h] );
-				Fake_rate[NoFile][h] = GetEfficiencyGraph(h_reco_pT_unmatched[NoFile][h],h_reco_pT_all[NoFile][h]  ) ; 
+			for(Int_t h=0; h<eta_bins;h++)
+			{
+					Reco_eff[NoFile][h] = GetEfficiencyGraph(h_gen_pT[NoFile][h] , h_gen_pT_all[NoFile][h] );
+					Fake_rate[NoFile][h] = GetEfficiencyGraph(h_reco_pT_unmatched[NoFile][h],h_reco_pT_all[NoFile][h]  ) ; 
+			}
 		}
 	}
-
 //========================================== plotting stuff ==========================
 
 	TCanvas *pad_chf = new TCanvas("pad_chf", "",Canvas_XpixelsEtaBins,Canvas_YpixelsEtaBins);
@@ -204,17 +204,17 @@ void Plot_Tracking_Comparisons_matched_histos()
 		if( NoFile== 0)  leg2->Draw("same"); 
 
 
-		if (NoFile==0 )  frameMETovSumEt = InitiateFrameOnCanvasPad(c_METovSumEt, 0 , "frameMETovSumEt", "MET / SumEt", "Entries", 0., 1.2, YaxisLowEndMultiplier*h_METovSumEt[NoFile]->GetMaximum(), YaxisHighEndMultiplier*h_METovSumEt[NoFile]->GetMaximum(), true, paveCMS);
+		if (NoFile==0 )  frameMETovSumEt = InitiateFrameOnCanvasPad(c_METovSumEt, 0 , "frameMETovSumEt", "MET / SumEt", "Entries", 0., 1.2, 0.001*YaxisLowEndMultiplier*h_METovSumEt[NoFile]->GetMaximum(), YaxisHighEndMultiplier*h_METovSumEt[NoFile]->GetMaximum(), true, paveCMS);
 		if (scale_histos && h_METovSumEt[NoFile]->Integral()>0 ) { h_METovSumEt[NoFile]->Scale(h_METovSumEt[0]->Integral() / h_METovSumEt[NoFile]->Integral()); h_METovSumEt[NoFile]->Rebin(2); }
 		DrawHistoToCanvasPad(c_METovSumEt, 0, h_METovSumEt[NoFile], Colors[NoFile], 1);
 		if( NoFile== 0)  leg2->Draw("same"); 
 
-		if (NoFile==0 )  frameMET = InitiateFrameOnCanvasPad(c_MET, 0 , "frameMET", "MET (GeV)", "Entries", 0., 600, 0.0001*YaxisLowEndMultiplier*h_MET[NoFile]->GetMaximum(), YaxisHighEndMultiplier*h_MET[NoFile]->GetMaximum(), true, paveCMS);
+		if (NoFile==0 )  frameMET = InitiateFrameOnCanvasPad(c_MET, 0 , "frameMET", "MET (GeV)", "Entries", 0., 1000, 0.0001*YaxisLowEndMultiplier*h_MET[NoFile]->GetMaximum(), YaxisHighEndMultiplier*h_MET[NoFile]->GetMaximum(), true, paveCMS);
 		if (scale_histos && h_MET[NoFile]->Integral()>0 ) h_MET[NoFile]->Scale(h_MET[0]->Integral() / h_MET[NoFile]->Integral());
 		DrawHistoToCanvasPad(c_MET, 0, h_MET[NoFile], Colors[NoFile], 1);
 		if( NoFile== 0)  leg2->Draw("same"); 
 
-		if(plot_minDR)
+		if(plot_minDR && plot_matched)
 		{
 			if (NoFile==0 )  frameMinDR = InitiateFrameOnCanvasPad(c_minDR, 0 , "frameMinDR", "minDR", "Entries", 0., 5., YaxisLowEndMultiplier*h_minDR[NoFile]->GetMaximum(), YaxisHighEndMultiplier*h_minDR[NoFile]->GetMaximum(), true, paveCMS);
 			if (scale_histos && h_minDR[NoFile]->Integral()>0 ) h_minDR[NoFile]->Scale(h_minDR[0]->Integral() /h_minDR[NoFile]->Integral());
@@ -291,25 +291,27 @@ void Plot_Tracking_Comparisons_matched_histos()
 			else if( eta_bins > 1 && NoFile== 0) { pad_NM->cd(iy+1); teta->Draw(); }
 
 
-			if (NoFile==0 ) framePt[iy] = InitiateFrameOnCanvasPad(pad_pt,iy+1, "framepT", "Jet pT (GeV)", "Entries", 0., pThistoMax,0.01*YaxisLowEndMultiplier*h_ptJet[NoFile][iy]->GetMaximum(), YaxisHighEndMultiplier*h_ptJet[NoFile][iy]->GetMaximum(), true, paveCMS);
+			if (NoFile==0 ) framePt[iy] = InitiateFrameOnCanvasPad(pad_pt,iy+1, "framepT", "Jet pT (GeV)", "Entries", pTlowCut, pThighCut,0.01*YaxisLowEndMultiplier*h_ptJet[NoFile][iy]->GetMaximum(), YaxisHighEndMultiplier*h_ptJet[NoFile][iy]->GetMaximum(), true, paveCMS);
 			if (scale_histos && h_ptJet[NoFile][iy]->Integral()>0 ) h_ptJet[NoFile][iy]->Scale(h_ptJet[0][iy]->Integral()/h_ptJet[NoFile][iy]->Integral());
 			DrawHistoToCanvasPad(pad_pt, iy+1, h_ptJet[NoFile][iy], Colors[NoFile], 1);
 			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad_pt->cd(iy+1); leg1->Draw("same");  }
 			else if( eta_bins > 1 && NoFile== 0) { pad_pt->cd(iy+1); teta->Draw(); }
+			cout << " Integral = " << h_ptJet[NoFile][iy]->Integral() << endl;
+
+			if (plot_matched)
+			{
+				if (NoFile==0 ) frameRecoEff[iy] = InitiateFrameOnCanvasPad(pad11,iy+1, "frameRecoEff", "p_{T} gen jet (GeV)", "Reconstruction Efficiency", pTlowCut, pThighCut, 0.6, 1.2, false, paveCMS);
+				DrawGraphToCanvasPad(pad11, iy+1, Reco_eff[NoFile][iy], Colors[NoFile], 1);
+				if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad11->cd(iy+1); leg1->Draw("same");  }
+				else if( eta_bins > 1 && NoFile== 0) { pad11->cd(iy+1); teta->Draw(); }
 
 
-			if (NoFile==0 ) frameRecoEff[iy] = InitiateFrameOnCanvasPad(pad11,iy+1, "frameRecoEff", "p_{T} gen jet (GeV)", "Reconstruction Efficiency", 0., pThistoMax, 0.6, 1.2, false, paveCMS);
-			DrawGraphToCanvasPad(pad11, iy+1, Reco_eff[NoFile][iy], Colors[NoFile], 1);
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad11->cd(iy+1); leg1->Draw("same");  }
-			else if( eta_bins > 1 && NoFile== 0) { pad11->cd(iy+1); teta->Draw(); }
+				if (NoFile==0 ) frameFakeRate[iy] = InitiateFrameOnCanvasPad(pad12,iy+1,"frameFakeRate","p_{T} reco jet (GeV)", "Reconstruction Fake rate", pTlowCut, pThighCut, -0.1, 1.0, false, paveCMS);
+				DrawGraphToCanvasPad(pad12, iy+1, Fake_rate[NoFile][iy], Colors[NoFile], 1);
+				if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad12->cd(iy+1); leg1->Draw("same");  }
+				else if( eta_bins > 1 && NoFile== 0) { pad12->cd(iy+1); teta->Draw(); }
 
-
-			if (NoFile==0 ) frameFakeRate[iy] = InitiateFrameOnCanvasPad(pad12,iy+1,"frameFakeRate","p_{T} reco jet (GeV)", "Reconstruction Fake rate", 0., pThistoMax, -0.1, 1.0, false, paveCMS);
-			DrawGraphToCanvasPad(pad12, iy+1, Fake_rate[NoFile][iy], Colors[NoFile], 1);
-			if(eta_bins <= 1 && NoFile == NoFiles-1 ) { pad12->cd(iy+1); leg1->Draw("same");  }
-			else if( eta_bins > 1 && NoFile== 0) { pad12->cd(iy+1); teta->Draw(); }
-
-
+			}
 		}
 	 
 
@@ -324,8 +326,8 @@ void Plot_Tracking_Comparisons_matched_histos()
 			pad_CM->cd(eta_bins+1);		leg1->Draw();
 			pad_NM->cd(eta_bins+1);		leg1->Draw();
 			pad_pt->cd(eta_bins+1);		leg1->Draw();
-			pad11->cd(eta_bins+1);	leg1->Draw();
-			pad12->cd(eta_bins+1);	leg1->Draw();
+			if (plot_matched)  pad11->cd(eta_bins+1);	leg1->Draw();
+			if (plot_matched)  pad12->cd(eta_bins+1);	leg1->Draw();
 		}
 
 	} // end of loop on files
@@ -360,11 +362,11 @@ void Plot_Tracking_Comparisons_matched_histos()
 		pad_pt->SaveAs(filename);
 
 
-		sprintf(filename,"%s/%s/%s_Reco_efficiency.png",analyzer_path,output_directory,image_name);
-		pad11->SaveAs(filename);
+		if (plot_matched) sprintf(filename,"%s/%s/%s_Reco_efficiency.png",analyzer_path,output_directory,image_name);
+		if (plot_matched) pad11->SaveAs(filename);
 
-		sprintf(filename,"%s/%s/%s_Reco_Fake_rate.png",analyzer_path,output_directory,image_name);
-		pad12->SaveAs(filename);
+		if (plot_matched) sprintf(filename,"%s/%s/%s_Reco_Fake_rate.png",analyzer_path,output_directory,image_name);
+		if (plot_matched) pad12->SaveAs(filename);
 
 		sprintf(filename,"%s/%s/%s_eta.png",analyzer_path,output_directory,image_name);
 		c_eta->SaveAs(filename);
@@ -375,7 +377,7 @@ void Plot_Tracking_Comparisons_matched_histos()
 		sprintf(filename,"%s/%s/%s_MET.png",analyzer_path,output_directory,image_name);
 		c_MET->SaveAs(filename);
 
-		if (plot_minDR) 
+		if (plot_minDR && plot_matched) 
 		{
 			sprintf(filename,"%s/%s/%s_minDR.png",analyzer_path,output_directory,image_name);
 			c_minDR->SaveAs(filename);

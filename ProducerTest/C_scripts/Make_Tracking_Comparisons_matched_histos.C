@@ -10,6 +10,9 @@ void Make_Tracking_Comparisons_matched_histos()
 //	gStyle->SetOptStat(0);
 
 	double pThistoMax = 1000;
+	if(pThistoMax< pThighCut) pThistoMax = pThighCut;
+
+	cout << pThistoMax <<endl;
 
 	const int NoFiles = sizeof(input_files)/sizeof(input_files[0]);
 	const int eta_bins = sizeof(yBnd)/sizeof(yBnd[0])-1;
@@ -167,7 +170,7 @@ for (int NoFile=0; NoFile<NoFiles; NoFile++)
 	std::vector<int> *PileupOriginBX = 0;
 
 	float weight;
- 	double SumEt,gen_SumEt,met, gen_met;
+ 	double SumEt, gen_SumEt, met, gen_met;
  	int nVtx;
 
 	for (int NoFile=0; NoFile<NoFiles; NoFile++)
@@ -186,6 +189,7 @@ for (int NoFile=0; NoFile<NoFiles; NoFile++)
 		tree[NoFile]->SetBranchAddress("npr",&npr);
 		tree[NoFile]->SetBranchAddress("muf",&muf);
 		tree[NoFile]->SetBranchAddress("chMult",&chMult);
+//		tree[NoFile]->SetBranchAddress("chm",&chMult);
 		tree[NoFile]->SetBranchAddress("neMult",&neMult);
 
 		tree[NoFile]->SetBranchAddress("SumEt",&SumEt);
@@ -207,6 +211,7 @@ for (int NoFile=0; NoFile<NoFiles; NoFile++)
 		tree[NoFile]->SetBranchAddress("gen_npr",&gen_npr);
 		tree[NoFile]->SetBranchAddress("gen_muf",&gen_muf);
 		tree[NoFile]->SetBranchAddress("gen_chMult",&gen_chMult);
+//		tree[NoFile]->SetBranchAddress("gen_chm",&gen_chMult);
 		tree[NoFile]->SetBranchAddress("gen_neMult",&gen_neMult);
 		tree[NoFile]->SetBranchAddress("gen_SumEt",&gen_SumEt);
 		tree[NoFile]->SetBranchAddress("gen_met",&gen_met);
@@ -267,7 +272,7 @@ for (int NoFile=0; NoFile<NoFiles; NoFile++)
 
 
 					if (!useWeights)	h_ETAJet[NoFile]->Fill( eta->at(reco_jets_matched_sequence[j]) );
-					else 				h_ETAJet[NoFile]->Fill( eta->at(reco_jets_matched_sequence[j]),weight );
+					else 			h_ETAJet[NoFile]->Fill( eta->at(reco_jets_matched_sequence[j]),weight );
 					int ybin = getBin(fabs(eta->at(reco_jets_matched_sequence[j])),yBnd, eta_bins);
 					if (ybin > -1)//fill hist's in the corresponding eta bin
 					{
@@ -365,17 +370,13 @@ for (int NoFile=0; NoFile<NoFiles; NoFile++)
 			h_MUFJet[NoFile][ybin]           ->Write();
 			h_PHIJet[NoFile][ybin]           ->Write();
 			h_ptJet[NoFile][ybin]            ->Write();
-			h_CMJet[NoFile][ybin]  			 ->Write();
+			h_CMJet[NoFile][ybin]  		 ->Write();
 			h_NMJet[NoFile][ybin]            ->Write();
 			h_gen_pT_all[NoFile][ybin]       ->Write();
 			h_gen_pT[NoFile][ybin]           ->Write();
 			h_reco_pT_unmatched[NoFile][ybin]->Write();
 			h_reco_pT_all[NoFile][ybin]      ->Write();
-
-
 		}
-		
-
 	}
 
 	

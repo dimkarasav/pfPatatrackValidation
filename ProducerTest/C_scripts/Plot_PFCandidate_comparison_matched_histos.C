@@ -10,7 +10,7 @@ void Plot_PFCandidate_comparison_matched_histos()
 	setTDRStyle_teliko(); 
 //	gStyle->SetOptStat(0);
 
-	double pTmax = 400;
+	double pTmax = 1000;
 
 
 
@@ -195,7 +195,7 @@ void Plot_PFCandidate_comparison_matched_histos()
 			else if( eta_bins > 1 && NoFile== 0) { pad_ChargedHadron_AveragepT->cd(iy+1); teta->Draw(); }
 
 
-			if (NoFile==0 )  frameNeutralHadron_AveragepT[iy] = InitiateFrameOnCanvasPad(pad_NeutralHadron_AveragepT, iy+1, "frameNeutralHadron_AveragepT", "Average pT of Neutral hadrons per jet (GeV)", "#jets", 0., 80, 0.1*YaxisLowEndMultiplier*h_NeutralHadron_AveragepT[NoFile][iy]->GetMaximum(), YaxisHighEndMultiplier*h_NeutralHadron_AveragepT[NoFile][iy]->GetMaximum() , true, paveCMS);
+			if (NoFile==0 )  frameNeutralHadron_AveragepT[iy] = InitiateFrameOnCanvasPad(pad_NeutralHadron_AveragepT, iy+1, "frameNeutralHadron_AveragepT", "Average pT of Neutral hadrons per jet (GeV)", "#jets", 0., 300, 0.1*YaxisLowEndMultiplier*h_NeutralHadron_AveragepT[NoFile][iy]->GetMaximum(), YaxisHighEndMultiplier*h_NeutralHadron_AveragepT[NoFile][iy]->GetMaximum() , true, paveCMS);
 			if (scale_histos && h_NeutralHadron_AveragepT[NoFile][iy]->Integral()>0 ) h_NeutralHadron_AveragepT[NoFile][iy]->Scale(h_NeutralHadron_AveragepT[0][iy]->Integral()/h_NeutralHadron_AveragepT[NoFile][iy]->Integral());
 			DrawHistoToCanvasPad(pad_NeutralHadron_AveragepT, iy+1, h_NeutralHadron_AveragepT[NoFile][iy], Colors[NoFile], 1);
 			if(eta_bins <= 1 && NoFile == NoFiles-1 ) {pad_NeutralHadron_AveragepT->cd(iy+1); leg1->Draw("same");  }

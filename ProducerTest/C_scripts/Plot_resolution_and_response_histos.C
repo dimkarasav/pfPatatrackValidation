@@ -85,15 +85,19 @@ void Plot_resolution_and_response_histos()
 		}
 	}
 
-	char pT_bins_legend[pT_bins][25];
+	char pT_bins_legend[pT_bins][50];
 	for (int iy=0; iy< pT_bins; iy++)
 	{
+
+		sprintf( pT_bins_legend[iy], "%3.0f<pT<%3.0f" , ptBnd[iy] ,ptBnd[iy+1] );
+/*
 		if (iy==0) sprintf( pT_bins_legend[iy], "pT<%f" , ptBnd[iy+1] );  
 		else if (iy < pT_bins -1 )
 		{
 			sprintf( pT_bins_legend[iy], "%f<pT<%f" , ptBnd[iy] ,ptBnd[iy+1] );
 		}
 		else sprintf( pT_bins_legend[iy], "p_T>%f" , ptBnd[iy] );  
+*/
 	}
 
 
@@ -109,6 +113,7 @@ void Plot_resolution_and_response_histos()
 
 			for (int pT_bin=0; pT_bin< pT_bins; pT_bin++ )
 			{
+				cout << "Now processing:   " << eta_bins_legend[eta_bin] << "   &   " << pT_bins_legend[pT_bin] << endl;
 				double Nsize = h_pTreco_ov_pTgen[NoFile][eta_bin][pT_bin]->Integral();
 				if ( !(Nsize>0) ) 
 				{
@@ -162,6 +167,8 @@ void Plot_resolution_and_response_histos()
 		{
 			for (int pT_bin=0; pT_bin< pT_bins; pT_bin++ )
 			{
+
+				cout << "Now processing:   " << eta_bins_legend[eta_bin] << "   &   " << pT_bins_legend[pT_bin] << endl;
 				if ( !(h_pTreco_ov_pTgen[NoFile][eta_bin][pT_bin]->Integral()>0) ) 
 				{
 					cout << "Warning!!! Histogram empty!!  eta bin : " << eta_bins_legend[eta_bin] << "  pT : " << pT_bins_legend[pT_bin] << endl;
@@ -187,7 +194,7 @@ void Plot_resolution_and_response_histos()
 					h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->Scale(scaleForTail); // scale to unweighted statistics to calc Wilson intervals
 					
 					double tail_Njet_low  = h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->Integral( h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->FindBin(0.), h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->FindBin( gausTF1->GetParameter(1) - NsigmaTail*fabs(gausTF1->GetParameter(2)) ) );
-					double tail_Njet_high = h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->Integral( h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->FindBin( gausTF1->GetParameter(1) + NsigmaTail*fabs(gausTF1->GetParameter(2)) ), h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->FindBin( 3.5 ) );
+					double tail_Njet_high = h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->Integral( h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->FindBin( gausTF1->GetParameter(1) + NsigmaTail*fabs(gausTF1->GetParameter(2)) ), h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->FindBin( 6.0 ) );
 
 					tailFrac_pTreco_ov_pTgen[NoFile][eta_bin][pT_bin] = (tail_Njet_low + tail_Njet_high) / h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->Integral();
 					tailFrac_pTreco_ov_pTgen_highErr[NoFile][eta_bin][pT_bin] = error1( h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->Integral(), tail_Njet_low + tail_Njet_high );
@@ -212,7 +219,8 @@ void Plot_resolution_and_response_histos()
 
 // ======================================================plotting stuff======================================//
 	char res_text[400];
-	
+	TH1D *frame_h_pTreco_ov_pTgen[eta_bins][pT_bins];
+
 
 	TCanvas *ptResponsePad = new TCanvas("ptResponsePad", "",Canvas_XpixelsEtaBins,Canvas_YpixelsEtaBins);
 	ptResponsePad->Divide(PadColumnsEtaBins,PadRowsEtaBins);
@@ -276,6 +284,7 @@ void Plot_resolution_and_response_histos()
 
 
 			pTresTailPad->cd(eta_bin+1);
+			pTresTailPad->cd(eta_bin+1)->SetLogx(1);
 			if(NoFile == 0 )
 			{	
 				TH1F *hr = pTresTailPad->cd(eta_bin+1)->DrawFrame(ptBnd[0],0.,ptBnd[pT_bins],0.3);
@@ -307,6 +316,7 @@ void Plot_resolution_and_response_histos()
 
 
 			ptResponsePad->cd(eta_bin+1);
+			ptResponsePad->cd(eta_bin+1)->SetLogx(1);
 			if(NoFile == 0 )
 			{	
 				TH1F *hr = ptResponsePad->cd(eta_bin+1)->DrawFrame(ptBnd[0],0.5,ptBnd[pT_bins],1.5);
@@ -339,6 +349,7 @@ void Plot_resolution_and_response_histos()
 
 			
 			ptResolutionPad->cd(eta_bin+1);
+			ptResolutionPad->cd(eta_bin+1)->SetLogx(1);
 			if(NoFile == 0 )
 			{	
 				TH1F *hr = ptResolutionPad->cd(eta_bin+1)->DrawFrame(ptBnd[0],0.001,ptBnd[pT_bins],0.4);
@@ -393,27 +404,14 @@ void Plot_resolution_and_response_histos()
 				leg3[eta_bin][pT_bin]->AddEntry(h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin], res_text , "L");
 
 
-				EtaPtResolutionPad[eta_bin]->cd(pT_bin+1);
-				EtaPtResolutionPad[eta_bin]->cd(pT_bin+1)->SetLogy(1);
-				h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->GetXaxis()->SetTitle("pT_reco / pT_gen");
-				h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->GetYaxis()->SetTitle("Entries");
-				h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->GetYaxis()->SetTitleOffset(1.3);
+				h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->Rebin(5);
 
-				h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->SetLineColor(Colors[NoFile]); 
-				h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->SetLineStyle(1);
-				h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->Rebin(10);
-
-				if(!useWeights)
+				if(NoFile==0)
 				{
-					h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->SetMinimum(0.9);
-					h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->SetMaximum(10000000);
+					sprintf(name,"frame_h_pTreco_ov_pTgen_etaBin%i_ptBin%i",eta_bin, pT_bin);
+					frame_h_pTreco_ov_pTgen[eta_bin][pT_bin] = InitiateFrameOnCanvasPad(EtaPtResolutionPad[eta_bin], pT_bin+1 , name, "pT_reco / pT_gen", "Entries", 0., 2.1, 0.9, 800*h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->GetMaximum(), true, paveCMS);
+					
 				}
-				else 
-				{
-					h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->SetMinimum(0.0001*h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->GetMaximum());
-					h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->SetMaximum(100*h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->GetMaximum());
-				}
-
 
 				
 				if(h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->Integral()>0 && h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->GetRMS()>0 )
@@ -421,9 +419,8 @@ void Plot_resolution_and_response_histos()
 					gausTF1 = (TF1*)h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->GetListOfFunctions()->FindObject("gaus");
 					h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->GetFunction("gaus")->SetBit(TF1::kNotDraw); // do not
 				}
+				DrawHistoToCanvasPad(EtaPtResolutionPad[eta_bin], pT_bin+1, h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin], Colors[NoFile], 1);
 
-				if ( NoFile==0  ) 	{	h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->Draw("hist");	paveCMS ->Draw("same");  }
-				else h_pTreco_ov_pTgen_JEScorrected[NoFile][eta_bin][pT_bin]->Draw("hist same");
 				if ( NoFile == NoFiles-1 )	leg3[eta_bin][pT_bin]->Draw("same");
 				teta->Draw();
 

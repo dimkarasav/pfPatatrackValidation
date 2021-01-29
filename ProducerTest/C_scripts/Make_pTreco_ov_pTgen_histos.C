@@ -15,7 +15,7 @@ void Make_pTreco_ov_pTgen_histos()
 	const int pT_bins = sizeof(ptBnd)/sizeof(ptBnd[0])-1;
 	const int NoFiles = sizeof(input_files)/sizeof(input_files[0]);
 
-
+	
 
 	char dir[700];
 	sprintf(dir,"%s/%s", analyzer_path,output_directory );
@@ -117,13 +117,25 @@ void Make_pTreco_ov_pTgen_histos()
 				int reco_ybin = getBin(fabs(eta->at(reco_jets_matched_sequence[j])),yBnd, eta_bins);
 				int reco_pTbin = getBin(jpt->at(reco_jets_matched_sequence[j]),ptBnd, pT_bins);
 
-			//	int gen_pTbin = getBin(gen_pt->at(j),ptBnd);
-			//	int gen_ybin = getBin(fabs(gen_eta->at(j)),yBnd);
-
-				if (reco_ybin>-1 && reco_pTbin>-1)
+				int gen_pTbin = getBin(gen_jpt->at(j), ptBnd, eta_bins);
+				int gen_ybin = getBin(fabs(gen_eta->at(j)), yBnd, pT_bins);
+				int ybin, pTbin;
+				if(useRecoBins) 
 				{
-					if(!useWeights)		h_pTreco_ov_pTgen[NoFile][reco_ybin][reco_pTbin] ->Fill( jpt->at( reco_jets_matched_sequence[j] ) / gen_jpt->at(j) );
-					else			h_pTreco_ov_pTgen[NoFile][reco_ybin][reco_pTbin] ->Fill( jpt->at( reco_jets_matched_sequence[j] ) / gen_jpt->at(j), weight );
+					ybin  = reco_ybin;
+					pTbin = reco_pTbin;
+				}
+				else
+				{
+					ybin  = gen_ybin;
+					pTbin = gen_pTbin;
+				}
+				
+
+				if (ybin>-1 && pTbin>-1)
+				{
+					if(!useWeights)		h_pTreco_ov_pTgen[NoFile][ybin][pTbin] ->Fill( jpt->at( reco_jets_matched_sequence[j] ) / gen_jpt->at(j) );
+					else			h_pTreco_ov_pTgen[NoFile][ybin][pTbin] ->Fill( jpt->at( reco_jets_matched_sequence[j] ) / gen_jpt->at(j), weight );
 				}
 
 			} //end of loop on jets

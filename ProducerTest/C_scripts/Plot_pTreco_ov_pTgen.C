@@ -3,7 +3,7 @@
 
 
 
-void Plot_pTreco_ov_pTgen(bool JEScorrected)
+void Plot_pTreco_ov_pTgen(bool JEScorrected = false)
 {
 
 	gROOT->LoadMacro("setTDRStyle_teliko.C");
@@ -31,7 +31,7 @@ void Plot_pTreco_ov_pTgen(bool JEScorrected)
 
 	const int eta_bins = sizeof(yBnd)/sizeof(yBnd[0])-1;
 	const int pT_bins = sizeof(ptBnd)/sizeof(ptBnd[0])-1;
-    const int NoFiles = sizeof(input_files)/sizeof(input_files[0]);    
+    	const int NoFiles = sizeof(input_files)/sizeof(input_files[0]);    
 	
 	cout << "Availabe legends in current file: " << endl;   
 	for(int NoFile=0; NoFile<NoFiles; NoFile++)		cout << "For " << legend_array[NoFile] << ", type " << NoFile<< endl;
@@ -102,11 +102,13 @@ void Plot_pTreco_ov_pTgen(bool JEScorrected)
 			{
 				sprintf(name,"h_pTreco_ov_pTgen_JEScorrected_%s_EtaBin%i_ptBin%i",legend,eta_bin,pT_bin);
 				h_pTreco_ov_pTgen[eta_bin][pT_bin] = (TH1D*)(f_input->Get(name));
+				//h_pTreco_ov_pTgen[eta_bin][pT_bin]->Rebin(2);
 			}
 			else
 			{
 				sprintf(name,"h_pTreco_ov_pTgen_%s_EtaBin%i_ptBin%i",legend,eta_bin,pT_bin);
 				h_pTreco_ov_pTgen[eta_bin][pT_bin] = (TH1D*)(f_input->Get(name));
+				//h_pTreco_ov_pTgen[eta_bin][pT_bin]->Rebin(2);
 			}
 			}
 		}
@@ -286,12 +288,13 @@ void Plot_pTreco_ov_pTgen(bool JEScorrected)
 				h_pTreco_ov_pTgen[eta_bin][pT_bin]->GetYaxis()->SetTitleOffset(1.3);
 
 				h_pTreco_ov_pTgen[eta_bin][pT_bin]->SetLineColor(1); 
-				h_pTreco_ov_pTgen[eta_bin][pT_bin]->SetMarkerSize(0.8); 
+				h_pTreco_ov_pTgen[eta_bin][pT_bin]->SetMarkerSize(0.45); 
+				h_pTreco_ov_pTgen[eta_bin][pT_bin]->SetLineWidth(1.05); 
 				h_pTreco_ov_pTgen[eta_bin][pT_bin]->SetLineStyle(1);
 
 //				h_pTreco_ov_pTgen[eta_bin][pT_bin]->SetMinimum(0.01*h_pTreco_ov_pTgen[eta_bin][pT_bin]->GetMaximum());
 //				h_pTreco_ov_pTgen[eta_bin][pT_bin]->SetMaximum(20*h_pTreco_ov_pTgen[eta_bin][pT_bin]->GetMaximum());
-				h_pTreco_ov_pTgen[eta_bin][pT_bin]->SetMinimum(0.1*h_pTreco_ov_pTgen[eta_bin][pT_bin]->GetMaximum());
+				h_pTreco_ov_pTgen[eta_bin][pT_bin]->SetMinimum(0.05*h_pTreco_ov_pTgen[eta_bin][pT_bin]->GetMaximum());
 				h_pTreco_ov_pTgen[eta_bin][pT_bin]->SetMaximum(1.5*h_pTreco_ov_pTgen[eta_bin][pT_bin]->GetMaximum());
 							
 				h_pTreco_ov_pTgen[eta_bin][pT_bin]->Draw();

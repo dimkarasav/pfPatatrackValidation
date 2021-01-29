@@ -110,9 +110,6 @@ void Make_PFCandidate_comparison_matched_histos()
 		}
 	}
 
-
-
-
 	std::vector<float> *jpt = 0;
 	std::vector<float> *eta = 0;
 	std::vector<float> *phi = 0;

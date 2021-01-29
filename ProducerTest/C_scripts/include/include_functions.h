@@ -10,7 +10,7 @@
 #include "TTree.h"
 #include "TCanvas.h"
 #include "TFrame.h"
-#include "TH1F.h"
+//#include "TH1F.h"
 #include "TH2F.h"
 #include "TBenchmark.h"
 #include "TRandom.h"
@@ -275,9 +275,10 @@ TF1* FindBestGaussianCoreFit(TH1D* histo)
 	while (rms_step_minus>1.1)
 	{ 
 		RangeLow = meanForRange - rms_step_minus*spreadForRange;
-		rms_step_plus = 2.2;
+//		rms_step_plus = 2.2;
+		rms_step_plus = rms_step_minus;  
 
-		while ( rms_step_plus>0.7 )
+		while ( rms_step_plus>0.7  )
 		{	
 			RangeUp = meanForRange + rms_step_plus*spreadForRange;
 			if(quiet_mode)	histo->Fit("gaus","0Q","0",RangeLow, RangeUp);
@@ -296,6 +297,7 @@ TF1* FindBestGaussianCoreFit(TH1D* histo)
 				ChiSquareBest = ChiSquare;
 				StepMinusBest = rms_step_minus; 
 				StepPlusBest = rms_step_plus; 
+				meanForRange = gausTF1->GetParameter(1);
 			}
 
 			if(!quiet_mode)
@@ -363,12 +365,12 @@ TH1D* InitiateFrameOnCanvasPad(TCanvas* c,int padNo, const char frameName[50], c
 	frame->SetLineColor(0);
 	frame->SetMarkerColor(0);
 	frame->GetXaxis()->SetTitleOffset(1.3);
-	frame->GetYaxis()->SetTitleOffset(1.3);
+	frame->GetYaxis()->SetTitleOffset(1.4);
 
 	c->cd(padNo);
 	if(logYOn) c->cd(padNo)->SetLogy(1);
 	frame->Draw("");
-	pave->Draw("same");
+	//pave->Draw("same");
 
 	return frame;
 }
@@ -379,6 +381,38 @@ void DrawHistoToCanvasPad(TCanvas* c, int padNo, TH1D *hist, int ColorNo, int Li
 	hist->SetLineStyle(LineStyleNo);	
 	c->cd(padNo);
 	hist->Draw("same hist");
+}
+
+void DrawTH1FToCanvasPad(TCanvas* c, int padNo, TH1F *hist, int ColorNo, int LineStyleNo)
+{
+	hist->SetLineColor(ColorNo);	
+	hist->SetLineStyle(LineStyleNo);	
+	c->cd(padNo);
+	hist->Draw("same hist");
+}
+
+void DrawTH2FToCanvasPad(TCanvas* c, int padNo, TH2F *hist, const char TitleX[50], const char TitleY[50], const char TitlePad[50], double Xmin, double Xmax, double Ymin, double Ymax, bool logXOn, bool logYOn,bool logZOn, TPaveText *pave)
+{
+		c->cd(padNo);
+		if(logZOn)c->cd(padNo)->SetLogz(1);
+		if(logYOn)c->cd(padNo)->SetLogy(1);
+		if(logXOn)c->cd(padNo)->SetLogx(1);
+		c->cd(padNo)->SetRightMargin(0.18);
+		c->cd(padNo)->SetTopMargin(0.07);					
+		c->SetTitle(TitlePad);
+
+		hist->SetStats(true);
+		hist->GetXaxis()->SetRangeUser(Xmin,Xmax);
+		hist->GetYaxis()->SetRangeUser(Ymin,Ymax);
+		hist->GetXaxis()->SetTitle(TitleX);
+		hist->GetYaxis()->SetTitle(TitleY);
+		hist->GetYaxis()->SetTitleOffset(1.3);
+		hist->SetMinimum(0.9 );
+		hist->SetMaximum(5*hist->GetMaximum());
+
+		hist->Draw("colz");
+		//pave ->Draw("same");
+
 }
 
 void DrawGraphToCanvasPad(TCanvas* c, int padNo, TGraphAsymmErrors *graph, int ColorNo, int LineStyleNo)
