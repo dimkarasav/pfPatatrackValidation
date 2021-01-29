@@ -1,5 +1,7 @@
-//template <typename T,unsigned S>
-//inline unsigned arraysize(const T (&v)[S]) { return S; }
+//==========================================
+// Initial Author: Dimitrios Karasavvas
+// Date:   29 Jan 2021
+//==========================================
 
 #include <vector>
 #ifdef __MAKECINT__
