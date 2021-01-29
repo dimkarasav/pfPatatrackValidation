@@ -4,7 +4,9 @@ git clone https://gitlab.cern.ch/dkarasav/pfpatatrackvalidation.git
 cmsenv
 scram b
 
+Instructions on how to perform comparisons of jet characteristics between two samples reconstructed with different cmssw configurations. 
 
+(The different configurations usually are reconstructing jets with patatrack pixel tracks or with full tracks.)
 
 
 1) Producing ntuples
@@ -13,7 +15,7 @@ scram b
 
 	a) Running the cmssw reconstruction configuration
 
-	Follow instructions here to get the latest patatrack release and get the configuration:
+	Follow instructions on scouting twiki to get the latest patatrack release and get the configuration:
 	https://twiki.cern.ch/twiki/bin/viewauth/CMS/CMSScouting
 
 	In the module "hltOutputScoutingPF" in the configuration, some needed collections are missing. Make sure the following collections are saved (add by hand the ones missing) :
@@ -37,12 +39,17 @@ scram b
 
 	To run the configuration do either cmsRun or submit the jobs to crab (suggested option for large input samples)
 
+	This gives you one (or many in case of job splitting) output.root file containing all the collections saved above for the processed events.
+
 	b) Produce ntuples with pfTreeProducer
+
+
+	Producer is located at pfpatatrackvalidation/ProducerTest/plugins/pfTreeProducer.cc
 
 	The configuration for the producer is : 
 
-	pfanalyzerCandidate_cfg.py to run locally via cmsRun
-	pfanalyzerOnCrab_cfg.py + crab_test.py   to send the jobs to crab
+	pfpatatrackvalidation/ProducerTest/test/pfanalyzerCandidate_cfg.py to run locally via cmsRun
+	pfpatatrackvalidation/ProducerTest/test/pfanalyzerOnCrab_cfg.py + crab_test.py   to send the jobs to crab
 
 	The inputs here are the outputs of step (1a) and can be given either directly on "pfanalyzerCandidate_cfg.py"  to run locally or 
 	via a .txt on crab_test.py to run on crab.
