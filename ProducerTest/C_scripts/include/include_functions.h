@@ -146,6 +146,179 @@ double error2 (double n1, double n2)
 }
 
 
+bool CheckIfBoolArrayIsTrue(bool **elementUsed, int gen_size, int reco_size)
+{
+
+	for(int j=0; j<gen_size; j++)
+	{
+		for (int k=0; k<reco_size; k++)
+		{
+			if(!elementUsed[j][k]) return false;
+		}
+	}
+	return true;
+}
+
+
+double FindColumnMinimum(double **deltaRarray, int i, int gen_size, bool **elementUsed)
+{
+	double minDR=100;
+	int min_position=-1;
+	for (int j=0; j<gen_size; j++)
+	{
+		if(minDR>deltaRarray[j][i] && !elementUsed[j][i] ) 
+		{
+			minDR=deltaRarray[j][i];
+			min_position=i;
+		}
+	}
+	return minDR;
+}
+
+double FindRowMinimum(double **deltaRarray, int i, int reco_size, bool **elementUsed)
+{
+	double minDR=100;
+	int min_position=-1;
+	for (int k=0; k<reco_size; k++)
+	{
+		if(minDR>deltaRarray[i][k] && !elementUsed[i][k] ) 
+		{
+			minDR=deltaRarray[i][k];
+			min_position=k;
+		}
+	}
+	return minDR;
+}
+
+double ** GetRecoToGenMatchDeltaR (std::vector<float> *gen_eta, std::vector<float> *gen_phi, std::vector<float> *reco_eta, std::vector<float> *reco_phi )
+{
+
+	const int gen_size = gen_eta->size();
+	const int reco_size = reco_eta->size();
+
+	double **deltaRarray; //two * are needed because it is a pointer to a pointer
+
+	deltaRarray=new double*[gen_size]; //creates a new array of pointers to double objects
+	for(int i=0; i<gen_size; ++i) deltaRarray[i]=new double[reco_size];
+
+	//now, you can access the members like you can with normal 2d arrays
+	//like array_ptr[1][3]
+
+	for ( int j=0; j<gen_size; j++) 
+	{
+		for(int k=0; k<reco_size; k++)
+		{
+			double deltaR = sqrt( pow( gen_eta->at(j) - reco_eta->at(k), 2) + pow( gen_phi->at(j) - reco_phi->at(k), 2) );
+			deltaRarray[j][k]=deltaR;		
+		}
+
+	}
+
+	return deltaRarray;
+}
+
+int * GetRecoToGenMatchSequenceAdvanced (std::vector<float> *gen_eta, std::vector<float> *gen_phi, std::vector<float> *reco_eta, std::vector<float> *reco_phi, double DR_threshold )
+{
+	
+	const int gen_size = gen_eta->size();
+	const int reco_size = reco_eta->size();
+
+	bool ** elementUsed;
+	elementUsed=new bool*[gen_size]; //creates a new array of pointers to bool objects
+	for(int i=0; i<gen_size; ++i) elementUsed[i]=new bool[reco_size];
+
+
+	int * reco_jets_matched_sequence = NULL;    //define a pointer and initialize it
+	reco_jets_matched_sequence = new int[gen_size];
+
+//initialize pointer arrays
+	for(int j=0; j<gen_size; j++)
+	{
+		reco_jets_matched_sequence[j]=-1; 
+		for (int k=0; k<reco_size; k++)
+		{		
+			elementUsed[j][k]=false;
+		}
+	}
+
+	double **deltaRarray;
+	deltaRarray = GetRecoToGenMatchDeltaR(gen_eta, gen_phi, reco_eta, reco_phi);
+/*  //Print Array
+	for (int i = 0; i < gen_size; ++i)
+	{
+		for (int j = 0; j < reco_size; ++j)
+		{
+			std::cout << deltaRarray[i][j] << ' ';
+		}
+		std::cout <<"\n\n"<< std::endl;
+	}
+*/
+	while (!CheckIfBoolArrayIsTrue(elementUsed, gen_size,reco_size))
+	{
+/* //Print Array
+		for (int i = 0; i < gen_size; i++)
+		{
+		    for (int j = 0; j < reco_size; j++)
+		    {
+		        if(elementUsed[i][j]) std::cout << "1" << ' ';
+				else std::cout << "0" << ' ';
+		    }
+		    std::cout <<"\n\n"<< std::endl;
+		}
+*/
+		for(int j=0; j<gen_size; j++)
+		{
+			for (int k=0; k<reco_size; k++)
+			{
+//				if(j==0) deltaRarray[j][k]=100+k; //this is a test so that nothing is matched to the 1st gen jet/Ptcl. 
+/*				
+				if(!elementUsed[j][k])
+				{
+					cout << "\n Delta R at  ( " << j<< " , " << k << ") = " <<deltaRarray[j][k]<<endl;
+					cout << "Column "<< k <<" has minimum = " <<FindColumnMinimum(deltaRarray, k, gen_size, elementUsed )<<endl;
+					cout << " Delta R - MinColumn difference = " << fabs(deltaRarray[j][k] - FindColumnMinimum(deltaRarray, k, gen_size, elementUsed))<< endl;
+				}
+*/
+				bool MinFound = false;
+				if ( deltaRarray[j][k] == FindColumnMinimum(deltaRarray, k, gen_size, elementUsed) && deltaRarray[j][k] == FindRowMinimum(deltaRarray, j, reco_size, elementUsed) ) 
+				{
+					reco_jets_matched_sequence[j]=k;
+					MinFound = true;
+				}
+				if(MinFound)
+				{
+					for( int kk=0; kk<reco_size; kk++) elementUsed[j][kk]=true;
+					for( int jj=0; jj<gen_size; jj++)  elementUsed[jj][k]=true;
+				}
+			}
+		}
+	}
+/*
+	for (int i = 0; i < gen_size; ++i)
+	{
+		for (int j = 0; j < reco_size; ++j)
+		{
+			if(elementUsed[i][j]) std::cout << "1" << ' ';
+			else std::cout << "0" << ' ';
+		}
+
+		std::cout <<"\n\n"<< std::endl;
+	}
+*/
+//	if (CheckIfBoolArrayIsTrue(elementUsed, gen_size,reco_size)) cout << "Bool Array final result = true"<<endl;
+//	else cout << "Bool Array final result = false"<<endl;
+	
+	for (int j=0; j<gen_size; j++)
+	{
+		if (deltaRarray[j][reco_jets_matched_sequence[j]]>DR_threshold) reco_jets_matched_sequence[j]=-1;
+	}
+
+//	for (int j=0; j<gen_size; j++)cout << " gen jet " << j  <<"  matched with reco jet = " << reco_jets_matched_sequence[j] << " with minDR = "<< deltaRarray[j][reco_jets_matched_sequence[j]] <<endl;
+
+	delete deltaRarray;
+	return reco_jets_matched_sequence;
+
+}
 
 
 
@@ -426,6 +599,20 @@ void DrawGraphToCanvasPad(TCanvas* c, int padNo, TGraphAsymmErrors *graph, int C
 	graph->SetMarkerSize(0.3);	
 	c->cd(padNo);
 	graph->Draw("same p");
+}
+
+void DrawGraphToCanvasPad(TCanvas* c, int padNo, TGraph *graph, int ColorNo, int LineStyleNo, bool DrawPoints)
+{
+	
+	graph->SetLineColor(ColorNo);
+	graph->SetLineWidth(2);
+	graph->SetMarkerStyle(24);	
+	graph->SetMarkerColor(ColorNo);
+	graph->SetLineStyle(LineStyleNo);
+	graph->SetMarkerSize(0.3);	
+	c->cd(padNo);
+	if(DrawPoints) graph->Draw("same p");
+	else 	       graph->Draw("same l");
 }
 
 
