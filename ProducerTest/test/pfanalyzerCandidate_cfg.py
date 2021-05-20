@@ -24,7 +24,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 1
 
 process.TFileService=cms.Service("TFileService",
 #                                 fileName=cms.string("full_hist_zmmPU_Dec19th.root")
-                                 fileName=cms.string("Patatrack_QCD_PU.root")
+                                 fileName=cms.string("FullTracking_Zprime_M50_pT300_reclusteredAK8.root")
 #                                 fileName=cms.string("delme.root")
 #                                 fileName=cms.string("FullTracking_Candidates_pigun60GeV_noPU.root")
                                  )
@@ -42,49 +42,58 @@ process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
 
-####'file:outputScoutingPF_pixelTracking_gpu_DevMC_ZJetsPUcleanedClassified.root'
-#        'file:outputScoutingPF_fullTrackingDevMCFullZmmNoPU.root',
- #######       'file:outputScoutingPF_fullTrackingDevMCFullZmmPU.root',
-#        'file:outputScoutingPF_fullTrackingDevMCFullttbarNoPU.root',
-#        'file:outputScoutingPF_fullTrackingDevMCFullttbarPU.root',
-#        'file:outputScoutingPF_pixelTracking_gpu_DevMC_ZmmNoPU.root',
-#        'file:outputScoutingPF_pixelTracking_gpu_DevMC_ZmmPU.root',
-#        'file:outputScoutingPF_pixelTracking_gpu_DevMC_ZmmPUZeta01.root',
-#        'file:outputScoutingPF_pixelTracking_gpu_DevMC_ttbarNoPU.root',
-#        'file:outputScoutingPF_pixelTracking_gpu_DevMC_ttbarPU.root',
-#        'file:outputScoutingPF_pixelTracking_gpu_DevMC_ttbarPUZeta01.root'
-#        'file:outputScoutingPF_pixelTracking_gpu_DevMC_zmmPUcleanedClassified.root'
-#        'file:outputScoutingPF_pixelTracking_gpu_DevMC_ttbarPUcleanedClassified.root'
 
 
-#        'file:outputScoutingPF_fullTrackingDevMCFullttbarPU.root'
-#         'file:outputScoutingPF_pixelTracking_gpu_DevMC_ZJetsPUcleanedClassified.root'
+#	'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test/201217_125524/0000/outputScoutingPFRun3_v17newPath_Zprime_1.root', #tighht
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test/201217_125524/0000/outputScoutingPFRun3_v17newPath_Zprime_3.root',
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test/201217_125524/0000/outputScoutingPFRun3_v17newPath_Zprime_4.root',
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test/201217_125524/0000/outputScoutingPFRun3_v17newPath_Zprime_5.root'
 
-#         'file:outputScoutingPF_pixelTracking_gpu_DevMC_ttbarPUcleanedClassified.root'
+  #     '/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test/201217_130130/0000/outputScoutingPFRun3_v17newPath_Zprime_1.root',# loose
+  #      '/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test/201217_130130/0000/outputScoutingPFRun3_v17newPath_Zprime_3.root',
+# '/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test/201217_130130/0000/outputScoutingPFRun3_v17newPath_Zprime_4.root',
+# '/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test/201217_130130/0000/outputScoutingPFRun3_v17newPath_Zprime_5.root'
 
-       '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/QCD_sample/outputScoutingPF_PatatrackPixelTracks_QCD_FlatPU30to80_linkFix_optimized_0.root',
-       '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/QCD_sample/outputScoutingPF_PatatrackPixelTracks_QCD_FlatPU30to80_linkFix_optimized_1.root',
-       '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/QCD_sample/outputScoutingPF_PatatrackPixelTracks_QCD_FlatPU30to80_linkFix_optimized_2.root',
-       '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/QCD_sample/outputScoutingPF_PatatrackPixelTracks_QCD_FlatPU30to80_linkFix_optimized_3.root',
- #      '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/QCD_sample/outputScoutingPF_PatatrackPixelTracks_QCD_FlatPU30to80_linkFix_optimized_4.root',
-       '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/QCD_sample/outputScoutingPF_PatatrackPixelTracks_QCD_FlatPU30to80_linkFix_optimized_5.root',
-       '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/QCD_sample/outputScoutingPF_PatatrackPixelTracks_QCD_FlatPU30to80_linkFix_optimized_6.root',
-       '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/QCD_sample/outputScoutingPF_PatatrackPixelTracks_QCD_FlatPU30to80_linkFix_optimized_7.root',
-       '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/QCD_sample/outputScoutingPF_PatatrackPixelTracks_QCD_FlatPU30to80_linkFix_optimized_8.root',
-       '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/QCD_sample/outputScoutingPF_PatatrackPixelTracks_QCD_FlatPU30to80_linkFix_optimized_9.root',
-       '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/QCD_sample/outputScoutingPF_PatatrackPixelTracks_QCD_FlatPU30to80_linkFix_optimized_10.root',
-       '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/QCD_sample/outputScoutingPF_PatatrackPixelTracks_QCD_FlatPU30to80_linkFix_optimized_11.root',
-       '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/QCD_sample/outputScoutingPF_PatatrackPixelTracks_QCD_FlatPU30to80_linkFix_optimized_12.root',
-       '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/QCD_sample/outputScoutingPF_PatatrackPixelTracks_QCD_FlatPU30to80_linkFix_optimized_13.root',
-       '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/QCD_sample/outputScoutingPF_PatatrackPixelTracks_QCD_FlatPU30to80_linkFix_optimized_14.root',
-       '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/QCD_sample/outputScoutingPF_PatatrackPixelTracks_QCD_FlatPU30to80_linkFix_optimized_15.root'
- #   'file:/afs/cern.ch/work/d/dkarasav/public/ScoutingTriggers/CMSSW_11_0_0_pre7/src/Jakobs_producer/ProducerTest/jakobs_root_files/outputScoutingPF_DijetFullTracking.root'
-#    '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/outputScoutingPF_PatatrackPixelTracks_ttbar_noPU_LooseCuts_linkFix.root'
- #   '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/QCD_sample/outputScoutingPF_PatatrackPixelTracks_QCD_FlatPU30to80_linkFix_optimized_0.root'
-#    '/store/user/dkarasav/ScoutingFiles/edmOutputs/110X_mcRun3_2021_realistic_v6-v1/RelVal_ttbar/FixTrackCaloLink/outputScoutingPF_PatatrackPixelTracks_ttbar_PU_linkFix_optimized.root'
-#    'file:/afs/cern.ch/work/d/dkarasav/public/ScoutingTriggers/CMSSW_11_1_0_pre2_Patatrack/src/pfPatatrackValidation/ProducerTest/delme.root'
-#    'file:/afs/cern.ch/work/d/dkarasav/public/ScoutingTriggers/CMSSW_11_0_0_pre13/outputScoutingPF_delme.root'
- #       'file:outputScoutingPF_pixelTracking_gpu_DevMC_ZJetsPU_CleanedZeta03_3vtx_Dec19.root'
+#	'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test/210325_134915/0000/outputScoutingPFRun3_1.root',
+#	'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test/210325_134915/0000/outputScoutingPFRun3_3.root',
+#	'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test/210325_134915/0000/outputScoutingPFRun3_2.root'
+
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/VectorZPrimeToQQ_M200_pT300_TuneCP5_14TeV_madgraph_pythia8/test_PatatrackLoose_ZprimeM200/210422_153648/0000/outputScoutingPFRun3_v17newPath_Zprime_1.root',
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/VectorZPrimeToQQ_M200_pT300_TuneCP5_14TeV_madgraph_pythia8/test_PatatrackLoose_ZprimeM200/210422_153648/0000/outputScoutingPFRun3_v17newPath_Zprime_2.root'
+
+# '/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/VectorZPrimeToQQ_M200_pT300_TuneCP5_14TeV_madgraph_pythia8/test_PatatrackTight_ZprimeM200/210422_150755/0000/outputScoutingPFRun3_v17newPath_Zprime_1.root'
+
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/VectorZPrimeToQQ_M200_pT300_TuneCP5_14TeV_madgraph_pythia8/test_FullTracking_ZprimeM200/210422_154401/0000/outputScoutingPFRun3_1.root',
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/VectorZPrimeToQQ_M200_pT300_TuneCP5_14TeV_madgraph_pythia8/test_FullTracking_ZprimeM200/210422_154401/0000/outputScoutingPFRun3_2.root'
+
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M100_pT300_TuneCP5_14TeV_madgraph_pythia8/test_FullTracking_ZprimeM100/210504_112150/0000/outputScoutingPFRun3_1.root',
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M100_pT300_TuneCP5_14TeV_madgraph_pythia8/test_FullTracking_ZprimeM100/210504_112150/0000/outputScoutingPFRun3_2.root',
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M100_pT300_TuneCP5_14TeV_madgraph_pythia8/test_FullTracking_ZprimeM100/210504_112150/0000/outputScoutingPFRun3_4.root'
+
+
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M100_pT300_TuneCP5_14TeV_madgraph_pythia8/test_PatatrackLoose_ZprimeM100/210504_111814/0000/outputScoutingPFRun3_v17newPath_Zprime_1.root',
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M100_pT300_TuneCP5_14TeV_madgraph_pythia8/test_PatatrackLoose_ZprimeM100/210504_111814/0000/outputScoutingPFRun3_v17newPath_Zprime_3.root'
+
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M100_pT300_TuneCP5_14TeV_madgraph_pythia8/test_PatatrackTight_ZprimeM100/210504_105309/0000/outputScoutingPFRun3_v17newPath_Zprime_1.root',
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M100_pT300_TuneCP5_14TeV_madgraph_pythia8/test_PatatrackTight_ZprimeM100/210504_105309/0000/outputScoutingPFRun3_v17newPath_Zprime_3.root',
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M100_pT300_TuneCP5_14TeV_madgraph_pythia8/test_PatatrackTight_ZprimeM100/210504_105309/0000/outputScoutingPFRun3_v17newPath_Zprime_4.root'
+
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test_PatatrackTight_ZprimeM50/210507_170938/0000/outputScoutingPFRun3_v17newPath_Zprime_3.root',
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test_PatatrackTight_ZprimeM50/210507_170938/0000/outputScoutingPFRun3_v17newPath_Zprime_4.root',
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test_PatatrackTight_ZprimeM50/210507_170938/0000/outputScoutingPFRun3_v17newPath_Zprime_5.root',
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test_PatatrackTight_ZprimeM50/210507_170938/0000/outputScoutingPFRun3_v17newPath_Zprime_6.root'
+
+
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test_PatatrackLoose_ZprimeM50/210507_170822/0000/outputScoutingPFRun3_v17newPath_Zprime_3.root',
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test_PatatrackLoose_ZprimeM50/210507_170822/0000/outputScoutingPFRun3_v17newPath_Zprime_4.root',
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test_PatatrackLoose_ZprimeM50/210507_170822/0000/outputScoutingPFRun3_v17newPath_Zprime_5.root',
+#'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test_PatatrackLoose_ZprimeM50/210507_170822/0000/outputScoutingPFRun3_v17newPath_Zprime_6.root'
+
+'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test_FullTracking_ZprimeM50/210507_170711/0000/outputScoutingPFRun3_1.root',
+'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test_FullTracking_ZprimeM50/210507_170711/0000/outputScoutingPFRun3_2.root',
+'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test_FullTracking_ZprimeM50/210507_170711/0000/outputScoutingPFRun3_3.root',
+'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test_FullTracking_ZprimeM50/210507_170711/0000/outputScoutingPFRun3_5.root',
+'/store/group/phys_exotica/dijet/Dijet13TeV/dimitris/ScoutingQCDtoBeTransfered/QCD_forSubstructure/VectorZPrimeToQQ_M50_pT300_TuneCP5_14TeV_madgraph_pythia8/test_FullTracking_ZprimeM50/210507_170711/0000/outputScoutingPFRun3_6.root'
     )
 )
 
@@ -108,7 +117,7 @@ process.dijetscouting = cms.EDAnalyzer(
     metphi     = cms.InputTag('hltScoutingPFPacker:pfMetPhi'),
 #    metpt      = cms.InputTag('hltScoutingCaloPacker:caloMetPt'),
 #    metphi     = cms.InputTag('hltScoutingCaloPacker:caloMetPhi'),
-    genJet     = cms.InputTag('ak4GenJets'),
+    genJet     = cms.InputTag('ak8GenJets'),
     primVtx     = cms.InputTag('hltScoutingPrimaryVertexPacker:primaryVtx'),
     genpart    = cms.InputTag('genParticles'),
     ptHat            = cms.untracked.InputTag('generator'),
