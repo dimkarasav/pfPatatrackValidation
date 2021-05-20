@@ -41,7 +41,7 @@ Instructions on how to perform comparisons of jet characteristics between two sa
 
 	This gives you one (or many in case of job splitting) output.root file containing all the collections saved above for the processed events.
 
-	b) Produce ntuples with pfTreeProducer
+	b1) Produce ntuples with pfTreeProducer
 
 
 	Producer is located at pfpatatrackvalidation/ProducerTest/plugins/pfTreeProducer.cc
@@ -54,6 +54,10 @@ Instructions on how to perform comparisons of jet characteristics between two sa
 	The inputs here are the outputs of step (1a) and can be given either directly on "pfanalyzerCandidate_cfg.py"  to run locally or 
 	via a .txt on crab_test.py to run on crab.
 
+	b2) Added new branch (JetSubstructure) with an updated version of the producer/configuration that produces jet substructure information using the fastjet algorithm to recluster PF cands into jets. The jet radius is hardcoded into the producer on line 663 (by defaulkt it is set to 0.8).
+	Additionaly it saves information for gen particles (it is currently selecting only Z' particles and its decay products since it was optimized for a specific study using Z'->qq samples.)
+
+	For some reason this producer was compiling only on "Patatrack" cmssw releases so for now i added it in a different branch. 
 
 
 2) Making comparison plots. 
@@ -141,6 +145,32 @@ In the directory "C_scripts" there are all the scripts to make and plot histogra
 		Plot_PFCandidate_comparison_matched_histos()		
 		.q		
 
+
+
+		Note: From now on the ntuples must be produced with the producer on the "JetSubstructure" branch
+
+		iv) Jet substructure variable comparison for reco jets matched to gen jets
+
+		.L Make_JetSubstructure_histos.C++
+		Make_JetSubstructure_histos()
+		.q
+
+		.L Plot_JetSubstructure_histos.C++
+		Plot_JetSubstructure_histos()
+		.q
+		
+		v) Jet substructure variable comparison for reco jets matched to gen particles
+
+		Note: Added an updated function that matches each reco element (eg jet) to only one gen element (eg jet/ptcle). 
+		With the ntuple format as produced in step b2, in order to avoid a matching to the Z' particle,  line 273 at "including_functions.h" should not be commented out.
+
+		.L Make_JetSubstructure_GenPtcl_matched_histos.C++
+		Make_JetSubstructure_GenPtcl_matched_histos()
+		.q
+
+		.L Plot_JetSubstructure_GenPtcl_matched_histos.C++
+		Plot_JetSubstructure_GenPtcl_matched_histos()
+		.q
 
 
 
